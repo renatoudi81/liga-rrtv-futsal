@@ -56,6 +56,13 @@ input,select{font:inherit;color:inherit}
 .kpi.ref em{display:block;font-style:normal;font-size:8.5px;font-weight:700;color:#c9636a;margin-top:2px;cursor:help}
 
 /* ── ABAS ──────────────────────────────── */
+#cloudbar{background:var(--panel);border-bottom:1px solid var(--rule);padding:5px 18px;display:flex;justify-content:flex-end;flex-shrink:0}
+.cloud{font-size:11px;font-weight:700;letter-spacing:.2px;padding:4px 12px;border-radius:20px;border:1px solid transparent;cursor:pointer;transition:.15s}
+.cloud.lock{background:#fff5e6;border-color:#f0d090;color:#8a5a00}
+.cloud.lock:hover{background:#ffe9c7}
+.cloud.on{background:var(--ok-bg);border-color:#bfe3cd;color:var(--ok);cursor:default}
+.cloud.off{background:var(--vm-bg);border-color:#e8b4bb;color:var(--vm-ink)}
+.cloud.wait{background:var(--panel2);border-color:var(--rule2);color:var(--ink3);cursor:default}
 #nav{display:flex;border-bottom:1px solid var(--rule);background:var(--panel);overflow-x:auto;flex-shrink:0}
 .nav-b{padding:11px 17px;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--ink3);border-bottom:3px solid transparent;white-space:nowrap;transition:.12s}
 .nav-b:hover{color:var(--ink)}
@@ -325,6 +332,9 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
     <div class="kpis num" id="kpis"></div>
   </header>
   <div id="ring"></div>
+  <div id="cloudbar">
+    <button id="cloudStatus" class="cloud wait" onclick="exigeEdicao()">Conectando à nuvem...</button>
+  </div>
 
   <nav id="nav">
     <button class="nav-b on" data-p="lanc">Lançar</button>
@@ -1142,6 +1152,7 @@ function rEqui() {
 }
 
 function zerarGols() {
+  if (!exigeEdicao()) return;
   const tot = roster.reduce((a, p) => a + Object.values(p.g).reduce((b, v) => b + v, 0), 0);
   if (!tot) { toast('Nenhum gol lançado'); return; }
   if (!confirm(`Apagar todos os ${tot} gol(s) lançados?\n\nOs cartões não serão alterados.`)) return;
@@ -1155,6 +1166,7 @@ function bindReg() {
   const el = document.getElementById('cfgDup');
   if (!el) return;
   el.addEventListener('change', e => {
+    if (!exigeEdicao()) { e.target.checked = duploConta; return; }
     duploConta = e.target.checked;
     save(); rAll();
     toast(duploConta ? 'Os 2 amarelos passam a contar no ciclo'
@@ -1163,6 +1175,7 @@ function bindReg() {
 }
 
 function addPlayer() {
+  if (!exigeEdicao()) return;
   const eq = document.getElementById('addEq').value;
   const nmEl = document.getElementById('addNm');
   const nm = nmEl.value.trim();
@@ -1176,6 +1189,7 @@ function addPlayer() {
 }
 
 function delPlayer(i) {
+  if (!exigeEdicao()) return;
   const p = roster[i];
   if (!p) return;
   const s = stats(p);
@@ -1188,6 +1202,7 @@ function delPlayer(i) {
 
 /* ── AÇÕES DE LANÇAMENTO ──────────────────────────────── */
 function limparRodada(i) {
+  if (!exigeEdicao()) return;
   const p = roster[i];
   if (!p) return;
   delete p.r[curRound];
@@ -1203,6 +1218,7 @@ function servindoAgora(p) {
 function tog(i, kind) {
   const p = roster[i];
   if (!p) return;
+  if (!exigeEdicao()) return;
   const jaTem = (p.r[curRound] || '') !== '';
   if (servindoAgora(p) && !jaTem) { toast(`${p.n} está suspenso nesta rodada`); return; }
   const c = p.r[curRound] || '';
@@ -1230,6 +1246,7 @@ function tog(i, kind) {
 function gol(i, delta) {
   const p = roster[i];
   if (!p) return;
+  if (!exigeEdicao()) return;
   const temGol = (p.g[curRound] || 0) > 0;
   if (servindoAgora(p) && !(temGol && delta < 0)) { toast(`${p.n} está suspenso nesta rodada`); return; }
   const cur = p.g[curRound] || 0;
@@ -1239,6 +1256,7 @@ function gol(i, delta) {
 }
 
 function addQuick() {
+  if (!exigeEdicao()) return;
   if (!curTeam) { toast('Escolha uma equipe primeiro'); return; }
   const nm = (prompt(`Novo jogador do ${curTeam}:`) || '').trim();
   if (!nm) return;
@@ -1264,15 +1282,67 @@ function rAll() {
 }
 
 /* ── PERSISTÊNCIA ─────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   NUVEM (Supabase) — fonte central dos dados
+   ══════════════════════════════════════════════════════════ */
+const SB_URL  = 'https://kktvmwttlordoltntlnl.supabase.co';
+const SB_KEY  = 'sb_publishable_feyAIoTFiFJ-bXglIHH6yw_Ty4quQaF';
+const SB_REST = SB_URL + '/rest/v1/estado';
+const SB_HEAD = {
+  'apikey': SB_KEY,
+  'Authorization': 'Bearer ' + SB_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=minimal'
+};
+const SENHA = 'Rayr2026';
+
+let podeEditar = false;   /* liberado após digitar a senha */
+let nuvemOK    = null;    /* null=testando, true=online, false=offline */
+let ultimoSync = 0;
+
 let saveTO = null;
+function estadoAtual() {
+  return { roster, lastRound, curRound, curTeam, duploConta, _v: 3 };
+}
+
 function save() {
+  /* cache local imediato (rede de segurança) */
+  try {
+    localStorage.setItem(K_ROS, JSON.stringify(roster));
+    localStorage.setItem(K_CFG, JSON.stringify({ lastRound, curRound, curTeam, duploConta }));
+  } catch (e) {}
+  /* nuvem com atraso agrupado */
   clearTimeout(saveTO);
-  saveTO = setTimeout(() => {
-    try {
-      localStorage.setItem(K_ROS, JSON.stringify(roster));
-      localStorage.setItem(K_CFG, JSON.stringify({ lastRound, curRound, curTeam, duploConta }));
-    } catch (e) { /* modo somente leitura: dados seguem na memória */ }
-  }, 250);
+  saveTO = setTimeout(salvarNuvem, 600);
+}
+
+async function salvarNuvem() {
+  if (!podeEditar) return;              /* consulta não escreve */
+  try {
+    const r = await fetch(SB_REST + "?id=eq.liga", {
+      method: 'PATCH',
+      headers: SB_HEAD,
+      body: JSON.stringify({ dados: estadoAtual(), atualizado_em: new Date().toISOString() })
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    nuvemOK = true; ultimoSync = Date.now(); marcaNuvem();
+  } catch (e) {
+    nuvemOK = false; marcaNuvem();
+    console.warn('Falha ao salvar na nuvem:', e.message);
+  }
+}
+
+function aplicarEstado(o) {
+  const fresh = () => ROSTER.map(p => ({ e: p.e, n: p.n, r: { ...p.r }, g: { ...p.g } }));
+  roster = (o && Array.isArray(o.roster) && o.roster.length) ? o.roster : fresh();
+  roster.forEach(p => { p.r = p.r || {}; p.g = p.g || {}; });
+  if (o) {
+    lastRound  = o.lastRound || 4;
+    curRound   = o.curRound  || lastRound;
+    curTeam    = o.curTeam   || null;
+    duploConta = !!o.duploConta;
+  }
+  if (!curTeam || !TEAMS.includes(curTeam)) curTeam = TEAMS[0];
 }
 
 function load() {
@@ -1338,6 +1408,7 @@ function doImport(file) {
 }
 
 function doReset() {
+  if (!exigeEdicao()) return;
   if (!confirm('Zerar todos os cartões e gols, voltando aos dados originais da planilha?\n\nGere um backup antes se quiser guardar o que já foi lançado.')) return;
   try { localStorage.removeItem(K_ROS); localStorage.removeItem(K_CFG); } catch (e) {}
   load(); rAll(); toast('Dados restaurados ao original');
@@ -1365,6 +1436,7 @@ document.querySelectorAll('.nav-b').forEach(b => {
 document.getElementById('rPrev').addEventListener('click', () => setRound(curRound - 1));
 document.getElementById('rNext').addEventListener('click', () => setRound(curRound + 1));
 document.getElementById('rDone').addEventListener('change', e => {
+  if (!exigeEdicao()) { e.target.checked = curRound <= lastRound; return; }
   lastRound = e.target.checked ? Math.max(lastRound, curRound) : curRound - 1;
   lastRound = Math.max(0, Math.min(ROUNDS, lastRound));
   save(); rAll();
@@ -1388,11 +1460,77 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') setRound(curRound + 1);
 });
 
+/* ══════════════════════════════════════════════════════════
+   BOOT COM NUVEM
+   ══════════════════════════════════════════════════════════ */
+function preencherEquipes() {
+  document.getElementById('gEq').innerHTML =
+    '<option value="">Todas as equipes</option>' + TEAMS.map(t => `<option>${t}</option>`).join('');
+}
+
+async function carregarNuvem() {
+  const r = await fetch(SB_REST + "?id=eq.liga&select=dados", {
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const linhas = await r.json();
+  return (linhas[0] && linhas[0].dados) ? linhas[0].dados : null;
+}
+
+async function bootNuvem() {
+  load();                       /* cache local aparece na hora */
+  preencherEquipes();
+  rAll();
+  try {
+    const nuvem = await carregarNuvem();
+    if (nuvem && nuvem.roster && nuvem.roster.length) {
+      aplicarEstado(nuvem);     /* nuvem é a verdade: substitui o cache */
+      try {
+        localStorage.setItem(K_ROS, JSON.stringify(roster));
+        localStorage.setItem(K_CFG, JSON.stringify({ lastRound, curRound, curTeam, duploConta }));
+      } catch (e) {}
+    } else {
+      /* nuvem vazia (primeira vez): sobe o estado atual */
+      podeEditar = true; await salvarNuvem(); podeEditar = false;
+    }
+    nuvemOK = true; ultimoSync = Date.now();
+  } catch (e) {
+    nuvemOK = false;
+    console.warn('Sem conexão com a nuvem, usando dados locais:', e.message);
+  }
+  preencherEquipes();
+  rAll();
+  marcaNuvem();
+}
+
+/* ── TRAVA DE EDIÇÃO ─────────────────────────────────── */
+function pedirSenha() {
+  if (podeEditar) return true;
+  const s = prompt('Senha para liberar lançamentos:');
+  if (s === null) return false;
+  if (s === SENHA) {
+    podeEditar = true; marcaNuvem();
+    toast('Edição liberada neste aparelho');
+    return true;
+  }
+  toast('Senha incorreta'); return false;
+}
+function exigeEdicao() { return podeEditar || pedirSenha(); }
+
+/* ── INDICADOR DE STATUS ─────────────────────────────── */
+function marcaNuvem() {
+  const el = document.getElementById('cloudStatus');
+  if (!el) return;
+  let txt, cls;
+  if (!podeEditar)          { txt = 'Consulta · clique para liberar edição'; cls = 'lock'; }
+  else if (nuvemOK === true){ txt = 'Editando · salvo na nuvem'; cls = 'on'; }
+  else if (nuvemOK === false){ txt = 'Sem conexão · salvo neste aparelho'; cls = 'off'; }
+  else                      { txt = 'Conectando à nuvem...'; cls = 'wait'; }
+  el.textContent = txt; el.className = 'cloud ' + cls;
+}
+
 /* ── INÍCIO ───────────────────────────────────────────── */
-load();
-document.getElementById('gEq').innerHTML =
-  '<option value="">Todas as equipes</option>' + TEAMS.map(t => `<option>${t}</option>`).join('');
-rAll();
+bootNuvem();
 
 </script>
 </body>
