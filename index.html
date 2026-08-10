@@ -6,27 +6,28 @@
 <title>Controle Disciplinar — 1ª Liga RRTV de Futsal</title>
 <style>
 :root{
-  --ink:#14161a; --ink2:#545c68; --ink3:#8b95a3;
-  --paper:#fff; --panel:#f2f4f7; --panel2:#e8ebf0;
-  --rule:#dbe0e7; --rule2:#c3cad4;
-  --am:#eab308; --am-bg:#fef5d8; --am-ink:#6b4d00;
-  --vm:#cc2233; --vm-bg:#fce8ea; --vm-ink:#8a1020;
-  --ok:#0d7a44; --ok-bg:#e3f4ea;
+  /* ══ PAINEL DE ARBITRAGEM — tema grafite denso ══ */
+  --ink:#eef1f5; --ink2:#aab4c2; --ink3:#6e7885;
+  --paper:#161a20;       /* superfície das linhas */
+  --panel:#11151b;       /* fundo de barras */
+  --panel2:#1e242d;      /* realce sutil */
+  --rule:#262d38; --rule2:#333c48;
 
-  /* Paleta real do escudo do Rubinho Sports: vermelho, preto e branco */
-  --rb-blk:#0d0d0f; --rb-red:#b01010; --rb-red2:#8c0d0d; --rb-wht:#f2f2f2;
+  --am:#f5c518; --am-bg:#3a3212; --am-ink:#ffd84d;
+  --vm:#ff4655; --vm-bg:#3a1620; --vm-ink:#ff8a95;
+  --ok:#2dd47f; --ok-bg:#123526;
+
+  /* Escudo do Rubinho: vermelho, preto, branco */
+  --rb-blk:#0a0c10; --rb-red:#e11122; --rb-red2:#a80d18; --rb-wht:#f2f2f2;
   --rb-ring:linear-gradient(90deg,var(--rb-red2),var(--rb-red) 30%,var(--rb-red) 70%,var(--rb-red2));
 
-  /* Acento da interface: o vermelho institucional do escudo, mais escuro e
-     fechado que o vermelho vivo de cartão (--vm #cc2233), que segue
-     exclusivo para punição junto do amarelo. */
-  --az:#8c0d0d; --az-bg:#f7e9e9;
-  --shadow:0 1px 2px rgba(20,22,26,.07),0 2px 8px rgba(20,22,26,.04);
+  --az:#e11122; --az-bg:#2a1418;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
-  background:var(--panel); color:var(--ink);
+  background:#0a0c10; color:var(--ink); color-scheme:dark;
   font:400 15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing:antialiased;
 }
@@ -47,16 +48,18 @@ input,select{font:inherit;color:inherit}
 .ttl h1{font-size:19px;font-weight:800;letter-spacing:-.4px;line-height:1.05;color:#fff}
 .ttl p{font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;margin-top:3px;color:#c9636a}
 .kpis{display:flex;gap:2px;align-items:stretch}
-.kpi{padding:4px 13px;border-left:1px solid rgba(255,255,255,.13);text-align:center;min-width:64px}
+.kpi{padding:3px 11px;border-left:1px solid rgba(255,255,255,.1);text-align:center;min-width:56px}
 .kpi:first-child{border-left:none}
-.kpi b{display:block;font-size:21px;font-weight:800;line-height:1;letter-spacing:-.5px;color:#fff}
+.kpi b{display:block;font-size:19px;font-weight:800;line-height:1;letter-spacing:-.5px;color:#fff}
 .kpi span{display:block;font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#7c8794;margin-top:4px}
 .kpi.a b{color:var(--am)} .kpi.v b{color:#ef5350} .kpi.s b{color:#ef5350}
-.kpi.ref b{color:#8fa0b3}
+.kpi.ref{background:var(--rb-red);border-radius:6px;border-left:none;padding:4px 12px}
+.kpi.ref b{color:#fff}
+.kpi.ref span{color:rgba(255,255,255,.75)!important}
 .kpi.ref em{display:block;font-style:normal;font-size:8.5px;font-weight:700;color:#c9636a;margin-top:2px;cursor:help}
 
 /* ── ABAS ──────────────────────────────── */
-#cloudbar{background:var(--panel);border-bottom:1px solid var(--rule);padding:5px 18px;display:flex;justify-content:flex-end;flex-shrink:0}
+#cloudbar{background:var(--panel);border-bottom:1px solid var(--rule);padding:4px 18px;display:flex;justify-content:flex-end;flex-shrink:0}
 .cloud{font-size:11px;font-weight:700;letter-spacing:.2px;padding:4px 12px;border-radius:20px;border:1px solid transparent;cursor:pointer;transition:.15s}
 .cloud.lock{background:#fff5e6;border-color:#f0d090;color:#8a5a00}
 .cloud.lock:hover{background:#ffe9c7}
@@ -66,7 +69,7 @@ input,select{font:inherit;color:inherit}
 #nav{display:flex;border-bottom:1px solid var(--rule);background:var(--panel);overflow-x:auto;flex-shrink:0}
 .nav-b{padding:11px 17px;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--ink3);border-bottom:3px solid transparent;white-space:nowrap;transition:.12s}
 .nav-b:hover{color:var(--ink)}
-.nav-b.on{color:var(--ink);background:var(--paper);border-bottom-color:transparent;
+.nav-b.on{color:#fff;background:var(--paper);border-bottom-color:transparent;
   box-shadow:inset 0 -3px 0 0 transparent;position:relative}
 .nav-b.on::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:3px;background:var(--rb-ring)}
 .nav-b .cnt{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:9px;background:var(--rb-red);color:#fff;font-size:10px;font-weight:800}
@@ -74,17 +77,18 @@ input,select{font:inherit;color:inherit}
 /* ── PAINÉIS ───────────────────────────── */
 .pane{display:none;flex:1;overflow-y:auto;min-height:0}
 .pane.on{display:block}
-.pane-in{padding:18px 20px 40px}
+.pane-in{padding:14px 18px 36px}
 
 /* ── SELETOR DE RODADA ─────────────────── */
-#rbar{border-bottom:1px solid var(--rule);background:var(--panel);padding:12px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;flex-shrink:0}
-.rnav{display:flex;align-items:center;gap:0;border:1px solid var(--rule2);border-radius:8px;background:var(--paper);overflow:hidden;box-shadow:var(--shadow)}
-.rnav button{width:40px;height:46px;font-size:19px;color:var(--ink2);transition:.12s}
-.rnav button:hover:not(:disabled){background:var(--panel2);color:var(--ink)}
-.rnav button:disabled{color:#ccd2da;cursor:not-allowed}
-.rnav .rnum{padding:0 4px;text-align:center;min-width:98px;border-left:1px solid var(--rule);border-right:1px solid var(--rule)}
-.rnav .rnum b{display:block;font-size:26px;font-weight:800;line-height:1.05;letter-spacing:-1px}
-.rnav .rnum span{display:block;font-size:8.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink3)}
+#rbar{border-bottom:1px solid var(--rule);background:var(--panel);padding:9px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;flex-shrink:0}
+.rbar-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink3)}
+.rpills{display:flex;gap:4px;flex-wrap:wrap}
+.rpill{width:32px;height:32px;border-radius:6px;border:1px solid var(--rule2);background:var(--panel2);color:var(--ink2);font-size:13px;font-weight:800;transition:.1s;display:flex;align-items:center;justify-content:center}
+.rpill:hover{border-color:var(--rb-red);color:#fff}
+.rpill.on{background:var(--rb-red);border-color:var(--rb-red);color:#fff;box-shadow:0 2px 8px rgba(225,17,34,.35)}
+.rpill.done{border-color:var(--ok)}
+.rpill.done.on{border-color:var(--rb-red)}
+.rpill::after{content:"";position:absolute}
 .rflag{display:flex;flex-direction:column;gap:3px}
 .rflag-t{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--ink3)}
 .rflag-v{font-size:13px;font-weight:700}
@@ -92,11 +96,15 @@ input,select{font:inherit;color:inherit}
 .rdone input{width:18px;height:18px;accent-color:var(--az);cursor:pointer}
 
 /* ── CHIPS DE EQUIPE ───────────────────── */
-#chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
-.chip{padding:7px 13px;border:1px solid var(--rule2);border-radius:20px;background:var(--paper);font-size:12px;font-weight:700;color:var(--ink2);transition:.12s;display:flex;align-items:center;gap:7px}
-.chip:hover{border-color:var(--ink3);color:var(--ink)}
-.chip.on{background:var(--rb-blk);border-color:var(--rb-blk);color:#fff}
-.chip .cb{display:inline-flex;gap:3px;align-items:center}
+.teambar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+#teamSel{flex:0 0 auto;min-width:230px;padding:9px 12px;border:1px solid var(--rule2);border-radius:7px;
+  background:var(--panel2);color:#fff;font-size:14px;font-weight:800;letter-spacing:-.2px;outline:none;transition:.1s;cursor:pointer}
+#teamSel:focus{border-color:var(--rb-red)}
+.teamnav{display:flex;gap:3px}
+.tnav{width:34px;height:36px;border:1px solid var(--rule2);border-radius:6px;background:var(--panel2);color:var(--ink2);font-size:18px;transition:.1s}
+.tnav:hover{background:var(--rb-red);border-color:var(--rb-red);color:#fff}
+.teamcards{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:700;color:var(--ink3)}
+.teamcards .tc-a{color:var(--am-ink)} .teamcards .tc-v{color:var(--vm-ink)}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 .dot.a{background:var(--am)} .dot.v{background:var(--vm)}
 
@@ -107,18 +115,18 @@ input,select{font:inherit;color:inherit}
 .sq-hd .sq-legend{margin-left:auto;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3)}
 .sq-hd .addq{margin-left:auto;padding:5px 11px;font-size:11.5px}
 
-.sqg{display:grid;grid-template-columns:minmax(150px,1.5fr) minmax(140px,1.05fr) 103px 116px;gap:18px;align-items:center}
+.sqg{display:grid;grid-template-columns:minmax(150px,1.6fr) minmax(130px,1fr) 96px 104px;gap:14px;align-items:center}
 .plr-hd{padding:9px 10px 7px;border-bottom:1px solid var(--rule2)}
 .plr-hd span{font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3)}
 .plr-hd .c{text-align:center}
-.plr{padding:8px 10px;border-bottom:1px solid var(--rule);border-left:3px solid transparent;transition:.11s}
-.plr:hover{background:#fafbfd;border-left-color:var(--rule2)}
+.plr{padding:5px 10px;border-bottom:1px solid var(--rule);border-left:3px solid transparent;transition:.1s}
+.plr:hover{background:var(--panel2);border-left-color:var(--rule2)}
 .plr.sit{background:var(--vm-bg);border-left-color:var(--vm)}
 .plr.hot{border-left-color:var(--am)}
 .plr.sus{border-left-color:var(--vm)}
 .plr-id{min-width:0}
-.plr-n{font-size:14.5px;font-weight:600;letter-spacing:-.1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.plr-m{font-size:11.5px;color:var(--ink3);display:flex;align-items:center;gap:5px;flex-wrap:wrap;min-width:0}
+.plr-n{font-size:13.5px;font-weight:600;letter-spacing:-.1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plr-m{font-size:11px;color:var(--ink3);display:flex;align-items:center;gap:5px;flex-wrap:wrap;min-width:0}
 .plr-m b{font-weight:700;color:var(--ink2)}
 .warn{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.1px}
 .warn.sus{background:var(--vm);color:#fff}
@@ -131,10 +139,10 @@ input,select{font:inherit;color:inherit}
 
 /* toggles de cartão: alvos grandes */
 .cards{display:flex;gap:5px;justify-content:center}
-.cbtn{width:49px;height:42px;border:1.5px solid var(--rule2);border-radius:7px;background:var(--paper);display:flex;align-items:center;justify-content:center;transition:.11s}
+.cbtn{width:44px;height:38px;border:1.5px solid var(--rule2);border-radius:6px;background:var(--panel2);display:flex;align-items:center;justify-content:center;transition:.1s}
 .cbtn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
-.cbtn i{width:21px;height:28px;border-radius:2px 2px 3px 3px;display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:800;font-style:normal;letter-spacing:0;transition:.11s;background:#eef0f4;color:#a8b0bb}
+.cbtn i{width:19px;height:25px;border-radius:2px 2px 3px 3px;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;font-style:normal;letter-spacing:0;transition:.1s;background:#2b3340;color:#5f6b7a}
 .cbtn.a{border-color:#e6dcb4} .cbtn.a:hover{border-color:var(--am)}
 .cbtn.v{border-color:#e8c6cb} .cbtn.v:hover{border-color:var(--vm)}
 .cbtn.a.on{background:var(--am-bg);border-color:var(--am)}
@@ -149,11 +157,11 @@ input,select{font:inherit;color:inherit}
 .cbtn:disabled{pointer-events:auto}
 
 /* stepper de gols */
-.gol{display:flex;align-items:center;justify-self:center;border:1px solid var(--rule2);border-radius:7px;overflow:hidden;background:var(--paper)}
-.gol button{width:34px;height:44px;font-size:17px;font-weight:700;color:var(--ink2);transition:.11s}
-.gol button:hover:not(:disabled){background:var(--panel2);color:var(--ink)}
+.gol{display:flex;align-items:center;justify-self:center;border:1px solid var(--rule2);border-radius:6px;overflow:hidden;background:var(--panel2)}
+.gol button{width:30px;height:38px;font-size:16px;font-weight:700;color:var(--ink2);transition:.1s}
+.gol button:hover:not(:disabled){background:var(--rule);color:var(--ink)}
 .gol button:disabled{color:#d3d8df;cursor:not-allowed}
-.gol .gv{width:40px;height:44px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;border-left:1px solid var(--rule);border-right:1px solid var(--rule)}
+.gol .gv{width:34px;height:38px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;border-left:1px solid var(--rule);border-right:1px solid var(--rule)}
 .gol .gv.z{color:#c3cad4;font-weight:600}
 
 /* ── SUSPENSOS ─────────────────────────── */
@@ -162,8 +170,8 @@ input,select{font:inherit;color:inherit}
 .sec-hd h2{font-size:15px;font-weight:800;letter-spacing:-.2px}
 .sec-hd .n{padding:2px 9px;border-radius:11px;background:var(--ink);color:#fff;font-size:11.5px;font-weight:800}
 .sec-hd .acts{margin-left:auto;display:flex;gap:7px}
-.btn{padding:7px 13px;border:1px solid var(--rule2);border-radius:6px;background:var(--paper);font-size:12px;font-weight:700;color:var(--ink2);transition:.12s;display:inline-flex;align-items:center;gap:6px}
-.btn:hover{border-color:var(--ink);color:var(--ink);background:var(--panel)}
+.btn{padding:6px 12px;border:1px solid var(--rule2);border-radius:6px;background:var(--panel2);font-size:11.5px;font-weight:700;color:var(--ink2);transition:.1s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--ink3);color:var(--ink);background:var(--rule)}
 .btn.pri{background:var(--rb-red);border-color:var(--rb-red);color:#fff}
 .btn.pri:hover{background:var(--rb-red2);border-color:var(--rb-red2);color:#fff}
 .btn.dgr{color:var(--vm);border-color:#e8b4bb}
@@ -187,20 +195,20 @@ input,select{font:inherit;color:inherit}
 .hist{width:100%;border-collapse:collapse;font-size:13px}
 .hist th{text-align:left;padding:7px 9px;font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--ink3);border-bottom:1px solid var(--rule2);background:var(--panel)}
 .hist td{padding:8px 9px;border-bottom:1px solid var(--rule)}
-.hist tr:hover td{background:#fafbfd}
+.hist tr:hover td{background:var(--panel2)}
 .hist .c{text-align:center}
 .hist .mut{color:var(--ink3);font-size:12px}
 
 /* ── GRADE ─────────────────────────────── */
 .gwrap{overflow:auto;border:1px solid var(--rule);border-radius:9px;background:var(--paper)}
 .grid{border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:100%}
-.grid th{background:var(--panel);padding:8px 7px;font-size:9.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--ink3);border-bottom:1px solid var(--rule2);position:sticky;top:0;z-index:3;white-space:nowrap;text-align:center}
+.grid th{background:var(--panel);padding:6px 7px;font-size:9.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--ink3);border-bottom:1px solid var(--rule2);position:sticky;top:0;z-index:3;white-space:nowrap;text-align:center}
 .grid th.l{text-align:left}
 .grid th.pin{left:0;z-index:5;text-align:left;border-right:1px solid var(--rule2)}
-.grid td{padding:0;border-bottom:1px solid var(--rule);text-align:center;height:34px}
-.grid td.pin{position:sticky;left:0;background:var(--paper);z-index:2;text-align:left;padding:0 10px;border-right:1px solid var(--rule2);white-space:nowrap;font-weight:600;min-width:190px;max-width:190px;overflow:hidden;text-overflow:ellipsis}
-.grid tr:hover td{background:#fafbfd}
-.grid tr:hover td.pin{background:#f5f7fa}
+.grid td{padding:0;border-bottom:1px solid var(--rule);text-align:center;height:30px}
+.grid td.pin{position:sticky;left:0;background:var(--paper);z-index:2;text-align:left;padding:0 10px;border-right:1px solid var(--rule2);white-space:nowrap;font-weight:600;min-width:180px;max-width:180px;overflow:hidden;text-overflow:ellipsis}
+.grid tr:hover td{background:var(--panel2)}
+.grid tr:hover td.pin{background:#212832}
 .grid tr.gteam td{background:var(--rb-blk)!important;color:#fff;text-align:left;padding:5px 10px 5px 12px;font-size:10px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;height:auto;position:sticky;left:0;
   box-shadow:inset 3px 0 0 0 var(--rb-red)}
 .gc{display:inline-flex;align-items:center;justify-content:center;width:19px;height:25px;border-radius:2px 2px 3px 3px;font-size:8px;font-weight:800;color:#fff}
@@ -208,8 +216,8 @@ input,select{font:inherit;color:inherit}
 .gc.v{background:var(--vm)}
 .gc.av{background:linear-gradient(101deg,var(--am) 48%,var(--vm) 48%)}
 .gc.d2{background:var(--am);color:var(--am-ink);box-shadow:inset 0 0 0 2px var(--vm)}
-.gempty{color:#e3e7ec;font-size:15px}
-.grid td.fut{background:repeating-linear-gradient(45deg,transparent,transparent 4px,#f7f8fa 4px,#f7f8fa 8px)}
+.gempty{color:#333c48;font-size:15px}
+.grid td.fut{background:repeating-linear-gradient(45deg,transparent,transparent 4px,#1a1f27 4px,#1a1f27 8px)}
 .gtot{font-weight:800;font-size:13px}
 .gtot.a{color:var(--am-ink)} .gtot.v{color:var(--vm)}
 sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;cursor:help}
@@ -247,7 +255,7 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
 
 /* ── FILTROS ───────────────────────────── */
 .filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.filters select,.filters input{padding:8px 11px;border:1px solid var(--rule2);border-radius:7px;background:var(--paper);font-size:13px;outline:none;transition:.12s}
+.filters select,.filters input{padding:7px 11px;border:1px solid var(--rule2);border-radius:6px;background:var(--panel2);color:var(--ink);font-size:12.5px;outline:none;transition:.1s}
 .filters select:focus,.filters input:focus{border-color:var(--az);box-shadow:0 0 0 3px var(--az-bg)}
 .filters input{flex:1;min-width:170px}
 
@@ -258,7 +266,7 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
 .rank th.s{cursor:pointer;user-select:none}
 .rank th.s:hover{color:var(--ink)}
 .rank td{padding:9px 10px;border-bottom:1px solid var(--rule)}
-.rank tr:hover td{background:#fafbfd}
+.rank tr:hover td{background:var(--panel2)}
 .rank .pos{font-weight:800;font-size:14px;width:44px;color:var(--ink3)}
 .rank tr.top1 .pos{color:var(--rb-red)} .rank tr.top2 .pos{color:#3a3f46} .rank tr.top3 .pos{color:#8c6d1f}
 .rank .nm{font-weight:600}
@@ -274,7 +282,7 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
 
 /* gestão de elenco */
 .addbox{display:flex;gap:8px;padding:13px;border:1px dashed var(--rule2);border-radius:9px;background:var(--panel);margin-bottom:18px;flex-wrap:wrap;align-items:center}
-.addbox select,.addbox input{padding:8px 11px;border:1px solid var(--rule2);border-radius:7px;background:var(--paper);font-size:13px;outline:none}
+.addbox select,.addbox input{padding:7px 11px;border:1px solid var(--rule2);border-radius:6px;background:var(--panel2);color:var(--ink);font-size:12.5px;outline:none}
 .addbox input{flex:1;min-width:160px}
 .addbox select:focus,.addbox input:focus{border-color:var(--az)}
 .xbtn{width:28px;height:28px;border-radius:6px;color:var(--ink3);font-size:16px;line-height:1;display:inline-flex;align-items:center;justify-content:center;transition:.12s}
@@ -288,6 +296,31 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
 #toast.on{opacity:1;transform:translate(-50%,0)}
 
 /* ── RESPONSIVO ────────────────────────── */
+/* ── CLASSIFICAÇÃO ── */
+.tab-camp tr.z-top td.pos{color:var(--rb-red);position:relative}
+.tab-camp tr.z-top td.pos::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--rb-red);border-radius:2px}
+.tab-camp .big{font-size:15px;font-weight:800;color:#fff}
+.tab-leg{margin-top:10px;font-size:11px;color:var(--ink3)}
+
+/* ── JOGOS ── */
+.jrbar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ink3)}
+.jrpill{width:28px;height:28px;border-radius:6px;border:1px solid var(--rule2);background:var(--panel2);color:var(--ink2);font-size:12px;font-weight:800;transition:.1s}
+.jrpill:hover{border-color:var(--rb-red);color:#fff}
+.jrpill.on{background:var(--rb-red);border-color:var(--rb-red);color:#fff}
+.jlist{display:flex;flex-direction:column;gap:8px}
+.jrow{display:grid;grid-template-columns:1fr auto 1fr auto auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--rule);border-radius:9px;background:var(--paper)}
+.jrow.fim{border-color:var(--rule2);background:var(--panel2)}
+.jteam{padding:8px 10px;border:1px solid var(--rule2);border-radius:6px;background:var(--panel2);color:#fff;font-size:13px;font-weight:700;outline:none;cursor:pointer;min-width:0}
+.jteam:focus{border-color:var(--rb-red)}
+.jscore{display:flex;align-items:center;gap:8px}
+.jgol{width:48px;height:40px;text-align:center;border:1px solid var(--rule2);border-radius:6px;background:var(--panel);color:#fff;font-size:18px;font-weight:800;outline:none;-moz-appearance:textfield}
+.jgol::-webkit-outer-spin-button,.jgol::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.jgol:focus{border-color:var(--rb-red)}
+.jx{color:var(--ink3);font-size:14px;font-weight:700}
+.jfim{padding:8px 12px;border:1px solid var(--rule2);border-radius:6px;background:var(--panel2);color:var(--ink2);font-size:11px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;transition:.1s}
+.jfim:hover{border-color:var(--ok);color:var(--ok)}
+.jfim.on{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+
 @media(max-width:720px){
   #top{padding:12px 14px}
   .ttl-logo{width:38px;height:38px}
@@ -341,31 +374,37 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
     <button class="nav-b" data-p="susp">Suspensos<span class="cnt" id="navSusp">0</span></button>
     <button class="nav-b" data-p="grade">Grade</button>
     <button class="nav-b" data-p="arti">Artilharia</button>
+    <button class="nav-b" data-p="tabela">Classificação</button>
+    <button class="nav-b" data-p="jogos">Jogos</button>
     <button class="nav-b" data-p="equi">Equipes</button>
+    <button class="nav-b" data-p="regra">Regulamento</button>
   </nav>
 
   <div id="rbar">
-    <div class="rnav">
-      <button id="rPrev" title="Rodada anterior">&lsaquo;</button>
-      <div class="rnum num"><b id="rNum">4</b><span>Rodada</span></div>
-      <button id="rNext" title="Próxima rodada">&rsaquo;</button>
-    </div>
+    <span class="rbar-lbl">Rodada</span>
+    <div class="rpills" id="rPills"></div>
     <div class="rflag">
-      <span class="rflag-t">Situação</span>
       <span class="rflag-v" id="rFlag"></span>
     </div>
     <label class="rdone">
       <input type="checkbox" id="rDone">
-      <span id="rDoneLbl">Rodada concluída</span>
+      <span id="rDoneLbl">Concluída</span>
     </label>
   </div>
 
   <section class="pane on" id="p-lanc"><div class="pane-in">
-    <div id="chips"></div>
+    <div class="teambar">
+      <select id="teamSel" onchange="pickTeamIdx(this.value)"></select>
+      <div class="teamnav">
+        <button class="tnav" onclick="stepTeam(-1)" title="Equipe anterior">‹</button>
+        <button class="tnav" onclick="stepTeam(1)" title="Próxima equipe">›</button>
+      </div>
+      <span id="teamCards" class="teamcards"></span>
+      <button class="btn addq" onclick="addQuick()" style="margin-left:auto">+ Jogador</button>
+    </div>
     <div class="sq-hd">
       <h2 id="sqName">—</h2>
       <span id="sqCount"></span>
-      <button class="btn addq" onclick="addQuick()">+ Jogador</button>
     </div>
     <div class="sqg plr-hd">
       <span>Jogador</span><span>Situação no ciclo</span>
@@ -398,7 +437,10 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
 
   <section class="pane" id="p-arti"><div class="pane-in" id="artiBody"></div></section>
 
+  <section class="pane" id="p-tabela"><div class="pane-in" id="tabelaBody"></div></section>
+  <section class="pane" id="p-jogos"><div class="pane-in" id="jogosBody"></div></section>
   <section class="pane" id="p-equi"><div class="pane-in" id="equiBody"></div></section>
+  <section class="pane" id="p-regra"><div class="pane-in" id="regraBody"></div></section>
 
   <footer id="foot">
     <span class="crit">Cada motivo vale 1 jogo e eles somam. Só o acúmulo de 3 amarelos zera o ciclo.</span>
@@ -548,6 +590,56 @@ const K_ROS = 'rrtv_roster_v2', K_CFG = 'rrtv_cfg_v2';
    '2A' dois amarelos no mesmo jogo → expulsão automática
    'V'  vermelho direto
    'AV' um amarelo + vermelho direto (infrações distintas)      */
+
+/* ══ CAMPEONATO: partidas e classificação ══
+   Cada jogo: {rodada, casa, fora, gc (gols casa), gf (gols fora), fim (bool)}
+   Pontuação: vitória 3, empate 1. Desempate: pontos > vitórias > confronto
+   direto > saldo de gols. Turno único. */
+let jogos = [];   /* preenchido do estado salvo */
+
+const PTS_V = 3, PTS_E = 1;
+
+function tabelaClassificacao() {
+  const T = {};
+  TEAMS.forEach(t => T[t] = { t, pts:0, j:0, v:0, e:0, d:0, gp:0, gc:0, sg:0 });
+  jogos.forEach(g => {
+    if (!g.fim) return;
+    const A = T[g.casa], B = T[g.fora];
+    if (!A || !B) return;
+    A.j++; B.j++;
+    A.gp += g.gc; A.gc += g.gf; A.sg = A.gp - A.gc;
+    B.gp += g.gf; B.gc += g.gc; B.sg = B.gp - B.gc;
+    if (g.gc > g.gf)      { A.v++; A.pts += PTS_V; B.d++; }
+    else if (g.gc < g.gf) { B.v++; B.pts += PTS_V; A.d++; }
+    else                  { A.e++; B.e++; A.pts += PTS_E; B.pts += PTS_E; }
+  });
+
+  const arr = Object.values(T);
+  arr.sort((a, b) => {
+    if (b.pts !== a.pts) return b.pts - a.pts;
+    if (b.v   !== a.v)   return b.v   - a.v;
+    /* confronto direto entre os dois empatados */
+    const cd = confrontoDireto(a.t, b.t);
+    if (cd !== 0) return cd;
+    if (b.sg !== a.sg) return b.sg - a.sg;
+    return a.t.localeCompare(b.t);
+  });
+  return arr;
+}
+
+/* +1 se A leva vantagem no confronto direto, -1 se B, 0 se igual/sem jogo */
+function confrontoDireto(a, b) {
+  let pa = 0, pb = 0;
+  jogos.forEach(g => {
+    if (!g.fim) return;
+    if (g.casa === a && g.fora === b) {
+      if (g.gc > g.gf) pa += 3; else if (g.gc < g.gf) pb += 3; else { pa++; pb++; }
+    } else if (g.casa === b && g.fora === a) {
+      if (g.gc > g.gf) pb += 3; else if (g.gc < g.gf) pa += 3; else { pa++; pb++; }
+    }
+  });
+  return pb - pa;   /* menor primeiro no sort → invertido: b-a vira desempate correto */
+}
 
 let roster = [], lastRound = 4, curRound = 4, curTeam = null;
 let gEq = '', gSt = '', gQ = '', eqSort = 'am';
@@ -703,41 +795,55 @@ function rKpis() {
 
 /* ── BARRA DE RODADA ──────────────────────────────────── */
 function rBar() {
-  document.getElementById('rNum').textContent = String(curRound).padStart(2, '0');
-  document.getElementById('rPrev').disabled = curRound <= 1;
-  document.getElementById('rNext').disabled = curRound >= ROUNDS;
+  let pills = '';
+  for (let r = 1; r <= ROUNDS; r++) {
+    const done = r <= lastRound;
+    pills += `<button class="rpill${r===curRound?' on':''}${done?' done':''}"
+      onclick="setRound(${r})" title="Rodada ${r}${done?' (concluída)':''}">${r}</button>`;
+  }
+  document.getElementById('rPills').innerHTML = pills;
 
   const done = curRound <= lastRound;
   document.getElementById('rDone').checked = done;
-  document.getElementById('rDoneLbl').textContent = `${curRound}ª rodada concluída`;
+  document.getElementById('rDoneLbl').textContent = 'Concluída';
 
   const flag = document.getElementById('rFlag');
   if (done) {
-    flag.innerHTML = `<span style="color:var(--ok)">Concluída</span>
-      <span style="color:var(--ink3);font-weight:600"> · suspensões valem para a ${lastRound + 1}ª</span>`;
+    flag.innerHTML = `<b style="color:var(--ok)">${curRound}ª concluída</b>
+      <span style="color:var(--ink3)"> · suspensões valem para a ${lastRound + 1}ª</span>`;
   } else {
-    flag.innerHTML = `<span style="color:var(--ink3)">Em aberto</span>
-      <span style="color:var(--ink3);font-weight:600"> · última concluída: ${lastRound}ª</span>`;
+    flag.innerHTML = `<b style="color:var(--ink3)">${curRound}ª em aberto</b>
+      <span style="color:var(--ink3)"> · última concluída: ${lastRound}ª</span>`;
   }
 }
 
 /* ── ABA LANÇAR ───────────────────────────────────────── */
 function rChips() {
   const d = all();
-  document.getElementById('chips').innerHTML = TEAMS.map(t => {
+  /* dropdown de equipes */
+  const sel = document.getElementById('teamSel');
+  sel.innerHTML = TEAMS.map((t, i) => {
     const tp = d.filter(x => x.p.e === t);
     let a = 0, v = 0;
-    tp.forEach(x => {
-      const c = x.p.r[curRound] || '';
-      if (c.includes('A')) a++;
-      if (c.includes('V')) v++;
-    });
-    const badge = (a || v)
-      ? `<span class="cb">${a ? `<span class="dot a"></span>${a}` : ''}${v ? `<span class="dot v"></span>${v}` : ''}</span>`
-      : '';
-    const idx = TEAMS.indexOf(t);
-    return `<button class="chip${t === curTeam ? ' on' : ''}" onclick="pickTeamIdx(${idx})">${t}${badge}</button>`;
+    tp.forEach(x => { const c = x.p.r[curRound] || ''; if (c.includes('A')) a++; if (c.includes('V')) v++; });
+    const mark = (a || v) ? `  (${a ? a + 'A' : ''}${a && v ? ' ' : ''}${v ? v + 'V' : ''})` : '';
+    return `<option value="${i}"${t === curTeam ? ' selected' : ''}>${t}${mark}</option>`;
   }).join('');
+  /* resumo de cartões da equipe atual nesta rodada */
+  const tp = d.filter(x => x.p.e === curTeam);
+  let a = 0, v = 0;
+  tp.forEach(x => { const c = x.p.r[curRound] || ''; if (c.includes('A')) a++; if (c.includes('V')) v++; });
+  const cardsEl = document.getElementById('teamCards');
+  cardsEl.innerHTML = (a || v)
+    ? `${a ? `<span class="dot a"></span><span class="tc-a">${a}</span>` : ''}
+       ${v ? `<span class="dot v"></span><span class="tc-v">${v}</span>` : ''} nesta rodada`
+    : `<span style="color:var(--ink3)">sem cartões nesta rodada</span>`;
+}
+
+function stepTeam(dir) {
+  let i = TEAMS.indexOf(curTeam);
+  i = (i + dir + TEAMS.length) % TEAMS.length;
+  pickTeam(TEAMS[i]);
 }
 
 function rSquad() {
@@ -1063,44 +1169,7 @@ function rEqui() {
     `<th class="c s${eqSort === k ? '" style="color:var(--ink)' : ''}" onclick="sortEq('${k}')"
       title="${ttl || lbl}">${lbl}${eqSort === k ? ' ▾' : ''}</th>`;
 
-  let h = `<div class="sec"><div class="sec-hd"><h2>Regulamento</h2></div>
-    <div class="reg">
-      <div class="reg-r">
-        <b>3 amarelos acumulados <i class="tag am">A3</i></b>
-        <span>Suspensão na partida seguinte. Ao cumpri-la, o ciclo <b class="z">zera</b>.
-        Esta é a única situação que zera o ciclo.</span>
-      </div>
-      <div class="reg-r">
-        <b>Vermelho direto <i class="tag vm">V</i></b>
-        <span>Suspensão na partida seguinte. Os amarelos que o jogador já tinha
-        <b class="m">continuam contando</b> no ciclo depois de cumprida.</span>
-      </div>
-      <div class="reg-r">
-        <b>Amarelo + vermelho direto <i class="tag av">AV</i></b>
-        <span>Infrações distintas: o amarelo valeu como advertência e entra no ciclo,
-        o vermelho gera a expulsão. Após a suspensão o amarelo
-        <b class="m">continua contando</b>.</span>
-      </div>
-      <div class="reg-r">
-        <b>2 amarelos no mesmo jogo <i class="tag am">2A</i></b>
-        <span>Os dois se fundem na expulsão e não entram no ciclo. Amarelos anteriores
-        <b class="m">continuam contando</b>.</span>
-      </div>
-      <div class="reg-r sum">
-        <b>Motivos somam <i class="tag sm">2 jogos</i></b>
-        <span>Quando o jogador fecha o ciclo de 3 amarelos <b>e</b> é expulso na mesma partida,
-        as duas punições são independentes: ele cumpre <b class="z">2 jogos</b>, um pelo acúmulo
-        e outro pela expulsão.</span>
-      </div>
-      <label class="reg-opt">
-        <input type="checkbox" id="cfgDup"${duploConta ? ' checked' : ''}>
-        <span><b>Contar esses 2 amarelos no ciclo de acumulação</b>
-        <em>Desmarcado (padrão CBFS): os amarelos foram consumidos pela expulsão e não entram no ciclo.
-        Marque apenas se o regulamento da liga determinar o contrário.</em></span>
-      </label>
-    </div></div>
-
-    <div class="sec"><div class="sec-hd"><h2>Classificação disciplinar</h2>
+  let h = `    <div class="sec"><div class="sec-hd"><h2>Classificação disciplinar</h2>
     <span style="font-size:11px;color:var(--ink3);font-weight:600">Índice = amarelos + vermelhos × 3</span></div>
     <table class="rank num"><thead><tr>
       <th class="c" style="width:44px">#</th><th>Equipe</th>
@@ -1148,7 +1217,6 @@ function rEqui() {
   });
   h += `</div>`;
   document.getElementById('equiBody').innerHTML = h;
-  bindReg();
 }
 
 function zerarGols() {
@@ -1161,18 +1229,6 @@ function zerarGols() {
 }
 
 function sortEq(k) { eqSort = k; rEqui(); }
-
-function bindReg() {
-  const el = document.getElementById('cfgDup');
-  if (!el) return;
-  el.addEventListener('change', e => {
-    if (!exigeEdicao()) { e.target.checked = duploConta; return; }
-    duploConta = e.target.checked;
-    save(); rAll();
-    toast(duploConta ? 'Os 2 amarelos passam a contar no ciclo'
-                     : 'Os 2 amarelos não contam no ciclo');
-  });
-}
 
 function addPlayer() {
   if (!exigeEdicao()) return;
@@ -1277,8 +1333,179 @@ function setRound(r) {
 }
 
 /* ── RENDER GERAL ─────────────────────────────────────── */
+function rJogos() {
+  /* jogos agrupados por rodada, com o da rodada atual em foco */
+  let html = `<div class="sec"><div class="sec-hd">
+    <h2>Jogos por rodada</h2>
+    <div class="acts">
+      <button class="btn pri" onclick="novoJogo()">+ Adicionar jogo</button>
+    </div></div>`;
+
+  /* seletor de rodada para filtrar os jogos exibidos */
+  html += `<div class="jrbar">Rodada: `;
+  for (let r = 1; r <= ROUNDS; r++)
+    html += `<button class="jrpill${r===curRound?' on':''}" onclick="setRound(${r})">${r}</button>`;
+  html += `</div>`;
+
+  const daRodada = jogos.map((g, idx) => ({ g, idx })).filter(x => x.g.rodada === curRound);
+
+  if (!daRodada.length) {
+    html += `<div class="empty"><b>Nenhum jogo na ${curRound}ª rodada</b>
+      <span>Clique em "Adicionar jogo" para lançar o primeiro confronto.</span></div>`;
+  } else {
+    html += `<div class="jlist">`;
+    daRodada.forEach(({ g, idx }) => {
+      const fim = g.fim;
+      html += `<div class="jrow${fim ? ' fim' : ''}">
+        <select class="jteam" onchange="setJogo(${idx},'casa',this.value)">
+          ${TEAMS.map(t => `<option${t===g.casa?' selected':''}>${t}</option>`).join('')}
+        </select>
+        <div class="jscore">
+          <input type="number" min="0" max="99" class="jgol" value="${g.gc ?? ''}"
+            oninput="setJogo(${idx},'gc',this.value)" placeholder="-">
+          <span class="jx">×</span>
+          <input type="number" min="0" max="99" class="jgol" value="${g.gf ?? ''}"
+            oninput="setJogo(${idx},'gf',this.value)" placeholder="-">
+        </div>
+        <select class="jteam" onchange="setJogo(${idx},'fora',this.value)">
+          ${TEAMS.map(t => `<option${t===g.fora?' selected':''}>${t}</option>`).join('')}
+        </select>
+        <button class="jfim${fim?' on':''}" onclick="toggleFim(${idx})"
+          title="${fim?'Jogo encerrado (clique para reabrir)':'Marcar como encerrado'}">${fim?'Encerrado':'Encerrar'}</button>
+        <button class="xbtn" onclick="delJogo(${idx})" title="Remover jogo">&times;</button>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  html += `</div>`;
+  document.getElementById('jogosBody').innerHTML = html;
+}
+
+/* ── AÇÕES DE JOGO ── */
+function novoJogo() {
+  if (!exigeEdicao()) return;
+  /* sugere duas equipes que ainda não se enfrentaram, senão as duas primeiras */
+  jogos.push({ rodada: curRound, casa: TEAMS[0], fora: TEAMS[1], gc: null, gf: null, fim: false });
+  save(); rAll();
+}
+function setJogo(i, campo, val) {
+  if (!exigeEdicao()) return;
+  const g = jogos[i]; if (!g) return;
+  if (campo === 'gc' || campo === 'gf') {
+    val = val === '' ? null : Math.max(0, Math.min(99, parseInt(val) || 0));
+  }
+  g[campo] = val;
+  if (g.casa === g.fora) toast('Um time não joga contra ele mesmo');
+  save(); rAll();
+}
+function toggleFim(i) {
+  if (!exigeEdicao()) return;
+  const g = jogos[i]; if (!g) return;
+  if (!g.fim && (g.gc === null || g.gf === null)) { toast('Informe o placar antes de encerrar'); return; }
+  if (!g.fim && g.casa === g.fora) { toast('Corrija os times antes de encerrar'); return; }
+  g.fim = !g.fim; save(); rAll();
+}
+function delJogo(i) {
+  if (!exigeEdicao()) return;
+  if (!confirm('Remover este jogo?')) return;
+  jogos.splice(i, 1); save(); rAll();
+}
+
+function rRegra() {
+  const h = `<div class="sec"><div class="sec-hd"><h2>Regulamento</h2></div>
+    <div class="reg">
+      <div class="reg-r">
+        <b>3 amarelos acumulados <i class="tag am">A3</i></b>
+        <span>Suspensão na partida seguinte. Ao cumpri-la, o ciclo <b class="z">zera</b>.
+        Esta é a única situação que zera o ciclo.</span>
+      </div>
+      <div class="reg-r">
+        <b>Vermelho direto <i class="tag vm">V</i></b>
+        <span>Suspensão na partida seguinte. Os amarelos que o jogador já tinha
+        <b class="m">continuam contando</b> no ciclo depois de cumprida.</span>
+      </div>
+      <div class="reg-r">
+        <b>Amarelo + vermelho direto <i class="tag av">AV</i></b>
+        <span>Infrações distintas: o amarelo valeu como advertência e entra no ciclo,
+        o vermelho gera a expulsão. Após a suspensão o amarelo
+        <b class="m">continua contando</b>.</span>
+      </div>
+      <div class="reg-r">
+        <b>2 amarelos no mesmo jogo <i class="tag am">2A</i></b>
+        <span>Os dois se fundem na expulsão e não entram no ciclo. Amarelos anteriores
+        <b class="m">continuam contando</b>.</span>
+      </div>
+      <div class="reg-r sum">
+        <b>Motivos somam <i class="tag sm">2 jogos</i></b>
+        <span>Quando o jogador fecha o ciclo de 3 amarelos <b>e</b> é expulso na mesma partida,
+        as duas punições são independentes: ele cumpre <b class="z">2 jogos</b>, um pelo acúmulo
+        e outro pela expulsão.</span>
+      </div>
+      <label class="reg-opt">
+        <input type="checkbox" id="cfgDup"${duploConta ? ' checked' : ''}>
+        <span><b>Contar esses 2 amarelos no ciclo de acumulação</b>
+        <em>Desmarcado (padrão CBFS): os amarelos foram consumidos pela expulsão e não entram no ciclo.
+        Marque apenas se o regulamento da liga determinar o contrário.</em></span>
+      </label>
+    </div></div>`;
+  document.getElementById('regraBody').innerHTML = h;
+  const el = document.getElementById('cfgDup');
+  if (el) el.addEventListener('change', e => {
+    if (!exigeEdicao()) { e.target.checked = duploConta; return; }
+    duploConta = e.target.checked;
+    save(); rAll();
+    toast(duploConta ? 'Os 2 amarelos passam a contar no ciclo' : 'Os 2 amarelos não contam no ciclo');
+  });
+}
+
+function rTabela() {
+  const tab = tabelaClassificacao();
+  const jogados = jogos.filter(g => g.fim).length;
+  let html = `<div class="sec"><div class="sec-hd">
+    <h2>Classificação — 1ª Liga RRTV</h2>
+    <span style="font-size:11px;color:var(--ink3);font-weight:600">Turno único · vitória 3, empate 1 · ${jogados} jogo(s) realizados</span></div>`;
+
+  if (!jogados) {
+    html += `<div class="empty"><b>Nenhum jogo lançado ainda</b>
+      <span>Cadastre os placares na aba Jogos para a classificação aparecer.</span></div></div>`;
+    document.getElementById('tabelaBody').innerHTML = html;
+    return;
+  }
+
+  html += `<table class="rank num tab-camp"><thead><tr>
+    <th class="c" style="width:38px">#</th><th>Equipe</th>
+    <th class="c" style="width:44px" title="Pontos">P</th>
+    <th class="c" style="width:36px" title="Jogos">J</th>
+    <th class="c" style="width:36px" title="Vitórias">V</th>
+    <th class="c" style="width:36px" title="Empates">E</th>
+    <th class="c" style="width:36px" title="Derrotas">D</th>
+    <th class="c" style="width:44px" title="Gols pró">GP</th>
+    <th class="c" style="width:44px" title="Gols contra">GC</th>
+    <th class="c" style="width:44px" title="Saldo de gols">SG</th>
+  </tr></thead><tbody>`;
+  tab.forEach((x, i) => {
+    const pos = i + 1;
+    const zona = pos <= 4 ? 'z-top' : '';   /* destaque para os 4 primeiros */
+    html += `<tr class="${zona}">
+      <td class="c pos">${pos}º</td>
+      <td class="nm">${x.t}</td>
+      <td class="c big">${x.pts}</td>
+      <td class="c">${x.j}</td>
+      <td class="c" style="color:var(--ok)">${x.v}</td>
+      <td class="c" style="color:var(--ink2)">${x.e}</td>
+      <td class="c" style="color:var(--vm)">${x.d}</td>
+      <td class="c">${x.gp}</td>
+      <td class="c">${x.gc}</td>
+      <td class="c" style="font-weight:700">${x.sg > 0 ? '+' + x.sg : x.sg}</td>
+    </tr>`;
+  });
+  html += `</tbody></table>
+    <div class="tab-leg">Os 4 primeiros destacados. Desempate: pontos, vitórias, confronto direto, saldo de gols.</div></div>`;
+  document.getElementById('tabelaBody').innerHTML = html;
+}
+
 function rAll() {
-  rKpis(); rBar(); rChips(); rSquad(); rSusp(); rGrade(); rArti(); rEqui();
+  rKpis(); rBar(); rChips(); rSquad(); rSusp(); rGrade(); rArti(); rTabela(); rJogos(); rEqui(); rRegra();
 }
 
 /* ── PERSISTÊNCIA ─────────────────────────────────────── */
@@ -1302,7 +1529,7 @@ let ultimoSync = 0;
 
 let saveTO = null;
 function estadoAtual() {
-  return { roster, lastRound, curRound, curTeam, duploConta, _v: 3 };
+  return { roster, jogos, lastRound, curRound, curTeam, duploConta, _v: 4 };
 }
 
 function save() {
@@ -1337,6 +1564,7 @@ function aplicarEstado(o) {
   roster = (o && Array.isArray(o.roster) && o.roster.length) ? o.roster : fresh();
   roster.forEach(p => { p.r = p.r || {}; p.g = p.g || {}; });
   if (o) {
+    jogos      = Array.isArray(o.jogos) ? o.jogos : [];
     lastRound  = o.lastRound || 4;
     curRound   = o.curRound  || lastRound;
     curTeam    = o.curTeam   || null;
@@ -1433,8 +1661,6 @@ document.querySelectorAll('.nav-b').forEach(b => {
   });
 });
 
-document.getElementById('rPrev').addEventListener('click', () => setRound(curRound - 1));
-document.getElementById('rNext').addEventListener('click', () => setRound(curRound + 1));
 document.getElementById('rDone').addEventListener('change', e => {
   if (!exigeEdicao()) { e.target.checked = curRound <= lastRound; return; }
   lastRound = e.target.checked ? Math.max(lastRound, curRound) : curRound - 1;
