@@ -168,7 +168,7 @@ input,select{font:inherit;color:inherit}
 .sec{margin-bottom:30px}
 .sec-hd{display:flex;align-items:center;gap:12px;padding-bottom:8px;border-bottom:2px solid var(--ink);margin-bottom:14px;flex-wrap:wrap}
 .sec-hd h2{font-size:15px;font-weight:800;letter-spacing:-.2px}
-.sec-hd .n{padding:2px 9px;border-radius:11px;background:var(--ink);color:#fff;font-size:11.5px;font-weight:800}
+.sec-hd .n{padding:2px 9px;border-radius:11px;background:var(--rb-red);color:#fff;font-size:11.5px;font-weight:800}
 .sec-hd .acts{margin-left:auto;display:flex;gap:7px}
 .btn{padding:6px 12px;border:1px solid var(--rule2);border-radius:6px;background:var(--panel2);font-size:11.5px;font-weight:700;color:var(--ink2);transition:.1s;display:inline-flex;align-items:center;gap:6px}
 .btn:hover{border-color:var(--ink3);color:var(--ink);background:var(--rule)}
@@ -321,6 +321,42 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
 .jfim:hover{border-color:var(--ok);color:var(--ok)}
 .jfim.on{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
 
+/* ── TRANSFERÊNCIAS (interna) ── */
+.tf-form{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;padding:14px;border:1px solid var(--rule);border-radius:10px;background:var(--paper)}
+.tf-field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.tf-field label{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3)}
+.tf-field select,.tf-field input{padding:9px 11px;border:1px solid var(--rule2);border-radius:7px;background:var(--panel2);color:#fff;font-size:13px;font-weight:600;outline:none;min-width:150px}
+.tf-field select:focus,.tf-field input:focus{border-color:var(--rb-red)}
+.tf-field input[readonly]{color:var(--ink2);cursor:default}
+.tf-narrow select{min-width:90px}
+.tf-note{font-size:11.5px;color:var(--ink3);margin-top:10px;line-height:1.5}
+.tf-list{display:flex;flex-direction:column;gap:7px}
+.tf-item{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:10px 13px;border:1px solid var(--rule);border-radius:9px;background:var(--paper)}
+.tf-i-main{display:flex;flex-direction:column;gap:2px;min-width:0}
+.tf-i-main b{font-size:14px;font-weight:700}
+.tf-i-main span{font-size:12px;color:var(--ink2)}
+.tf-arrow{color:var(--rb-red);font-weight:800}
+.tf-i-rod{font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--ink3);white-space:nowrap}
+
+/* ── PORTAL PÚBLICO ── */
+.portal-hero{background:linear-gradient(135deg,var(--rb-blk),#1a0608);border:1px solid var(--rule);border-radius:12px;padding:26px 24px;margin-bottom:20px;position:relative;overflow:hidden}
+.portal-hero::after{content:"";position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(225,17,34,.25),transparent 70%)}
+.portal-badge{display:inline-block;padding:3px 10px;border-radius:20px;background:var(--rb-red);color:#fff;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.portal-hero h1{font-size:24px;font-weight:800;letter-spacing:-.5px;color:#fff;line-height:1.1}
+.portal-hero p{font-size:12.5px;color:var(--ink2);margin-top:6px}
+.portal-feed{display:flex;flex-direction:column;gap:6px}
+.pf-round{display:flex;align-items:baseline;gap:10px;margin:14px 0 6px;padding-bottom:6px;border-bottom:2px solid var(--rb-red)}
+.pf-round-lbl{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#fff}
+.pf-round-n{font-size:11px;color:var(--ink3)}
+.pf-card{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;border:1px solid var(--rule);border-radius:9px;background:var(--paper);transition:.12s}
+.pf-card:hover{border-color:var(--rule2);transform:translateX(2px)}
+.pf-player{font-size:14.5px;font-weight:700;color:#fff}
+.pf-move{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600}
+.pf-from{color:var(--ink2)}
+.pf-arrow{color:var(--rb-red);font-size:16px;font-weight:800}
+.pf-to{color:var(--ok);font-weight:700}
+.portal-foot{margin-top:16px;text-align:center;font-size:11px;color:var(--ink3)}
+
 @media(max-width:720px){
   #top{padding:12px 14px}
   .ttl-logo{width:38px;height:38px}
@@ -376,6 +412,8 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
     <button class="nav-b" data-p="arti">Artilharia</button>
     <button class="nav-b" data-p="tabela">Classificação</button>
     <button class="nav-b" data-p="jogos">Jogos</button>
+    <button class="nav-b" data-p="portal">Portal</button>
+    <button class="nav-b" data-p="transf">Transferências</button>
     <button class="nav-b" data-p="equi">Equipes</button>
     <button class="nav-b" data-p="regra">Regulamento</button>
   </nav>
@@ -440,6 +478,8 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
   <section class="pane" id="p-tabela"><div class="pane-in" id="tabelaBody"></div></section>
   <section class="pane" id="p-jogos"><div class="pane-in" id="jogosBody"></div></section>
   <section class="pane" id="p-equi"><div class="pane-in" id="equiBody"></div></section>
+  <section class="pane" id="p-portal"><div class="pane-in" id="portalBody"></div></section>
+  <section class="pane" id="p-transf"><div class="pane-in" id="transfBody"></div></section>
   <section class="pane" id="p-regra"><div class="pane-in" id="regraBody"></div></section>
 
   <footer id="foot">
@@ -596,6 +636,41 @@ const K_ROS = 'rrtv_roster_v2', K_CFG = 'rrtv_cfg_v2';
    Pontuação: vitória 3, empate 1. Desempate: pontos > vitórias > confronto
    direto > saldo de gols. Turno único. */
 let jogos = [];   /* preenchido do estado salvo */
+let transf = [];  /* transferências: {n, de, para, rodada, ts} */
+
+/* Em que time o jogador estava numa dada rodada.
+   Parte do time atual (p.e) e desfaz as transferências posteriores. */
+/* Estatística disciplinar por equipe, com atribuição por rodada:
+   cada cartão conta para o time em que o jogador estava naquela rodada. */
+function statsEquipePorRodada(nomeTime) {
+  let am = 0, vm = 0, gl = 0;
+  roster.forEach(p => {
+    for (let r = 1; r <= ROUNDS; r++) {
+      if (r > lastRound) continue;               /* só rodadas oficiais */
+      if (timeNaRodada(p, r) !== nomeTime) continue;
+      const c = p.r[r] || '';
+      const i = parse(c);
+      am += i.am;
+      if (i.exp) vm++;
+      gl += (p.g[r] || 0);
+    }
+  });
+  return { am, vm, gl };
+}
+
+function timeNaRodada(p, rodada) {
+  /* transferências desse jogador, em ordem de rodada */
+  const ts = transf.filter(t => t.n === p.n).sort((a, b) => a.rodada - b.rodada);
+  if (!ts.length) return p.e;
+  /* antes da 1ª transferência, ele estava no 'de' dela */
+  if (rodada < ts[0].rodada) return ts[0].de;
+  /* encontra a última transferência com rodada <= a rodada consultada */
+  let time = ts[0].de;
+  for (const t of ts) {
+    if (t.rodada <= rodada) time = t.para; else break;
+  }
+  return time;
+}
 
 const PTS_V = 3, PTS_E = 1;
 
@@ -1153,13 +1228,11 @@ function rArti() {
 function rEqui() {
   const d = all();
   const rows = TEAMS.map(t => {
-    const tp = d.filter(x => x.p.e === t);
-    const am = tp.reduce((a, x) => a + x.s.ta, 0);
-    const vm = tp.reduce((a, x) => a + x.s.tv, 0);
+    const tp = d.filter(x => x.p.e === t);          /* elenco ATUAL do time */
+    const rd = statsEquipePorRodada(t);             /* cartões por atribuição de rodada */
     const sp = tp.reduce((a, x) => a + x.s.trig.reduce((b, t) => b + t.jogos, 0), 0);
-    const at = tp.filter(x => x.s.susp).length;
-    const gl = tp.reduce((a, x) => a + x.s.tg, 0);
-    return { t, n: tp.length, am, vm, sp, at, gl, fp: am + vm * 3 };
+    const at = tp.filter(x => x.s.susp).length;     /* suspensos AGORA seguem o jogador */
+    return { t, n: tp.length, am: rd.am, vm: rd.vm, sp, at, gl: rd.gl, fp: rd.am + rd.vm * 3 };
   });
 
   const key = { am: 'am', vm: 'vm', fp: 'fp', sp: 'sp', gl: 'gl', n: 'n' }[eqSort] || 'fp';
@@ -1458,6 +1531,146 @@ function rRegra() {
   });
 }
 
+function rPortal() {
+  const el = document.getElementById('portalBody');
+  if (!el) return;
+  const lista = [...transf].sort((a, b) => b.rodada - a.rodada || (b.ts||0) - (a.ts||0));
+
+  let html = `<div class="portal-hero">
+    <div class="portal-badge">Portal de Transparência</div>
+    <h1>Mercado de Transferências</h1>
+    <p>1ª Liga RRTV de Futsal · registro público de movimentações</p>
+  </div>`;
+
+  if (!lista.length) {
+    html += `<div class="empty"><b>Nenhuma transferência até agora</b>
+      <span>As movimentações de jogadores entre equipes aparecerão aqui.</span></div>`;
+    el.innerHTML = html;
+    return;
+  }
+
+  /* agrupa por rodada */
+  const porRodada = {};
+  lista.forEach(t => { (porRodada[t.rodada] = porRodada[t.rodada] || []).push(t); });
+  const rodadas = Object.keys(porRodada).map(Number).sort((a, b) => b - a);
+
+  html += `<div class="portal-feed">`;
+  rodadas.forEach(r => {
+    html += `<div class="pf-round"><span class="pf-round-lbl">${r}ª rodada</span>
+      <span class="pf-round-n">${porRodada[r].length} transferência(s)</span></div>`;
+    porRodada[r].forEach(t => {
+      html += `<div class="pf-card">
+        <div class="pf-player">${t.n}</div>
+        <div class="pf-move">
+          <span class="pf-from">${t.de}</span>
+          <span class="pf-arrow">→</span>
+          <span class="pf-to">${t.para}</span>
+        </div>
+      </div>`;
+    });
+  });
+  html += `</div>
+    <div class="portal-foot">${lista.length} transferência(s) registrada(s) · dados atualizados em tempo real</div>`;
+  el.innerHTML = html;
+}
+
+function rTransf() {
+  const el = document.getElementById('transfBody');
+  if (!el) return;
+  let html = `<div class="sec"><div class="sec-hd"><h2>Registrar transferência</h2></div>
+    <div class="tf-form">
+      <div class="tf-field">
+        <label>Jogador</label>
+        <select id="tfJog" onchange="tfPreenche()"></select>
+      </div>
+      <div class="tf-field">
+        <label>Do time</label>
+        <input id="tfDe" readonly>
+      </div>
+      <div class="tf-field">
+        <label>Para o time</label>
+        <select id="tfPara">${TEAMS.map(t => `<option>${t}</option>`).join('')}</select>
+      </div>
+      <div class="tf-field tf-narrow">
+        <label>A partir da rodada</label>
+        <select id="tfRod">${Array.from({length:ROUNDS},(_,i)=>`<option${i+1===curRound?' selected':''}>${i+1}</option>`).join('')}</select>
+      </div>
+      <button class="btn pri" onclick="registrarTransf()">Confirmar transferência</button>
+    </div>
+    <p class="tf-note">O jogador leva o histórico de cartões e suspensões pendentes. Os cartões que ele
+    já tirou permanecem contando para o time anterior na classificação disciplinar.</p></div>`;
+
+  /* histórico interno (com botão remover) */
+  const lista = [...transf].sort((a, b) => (b.ts||0) - (a.ts||0));
+  html += `<div class="sec"><div class="sec-hd"><h2>Transferências registradas</h2>
+    <span class="n">${lista.length}</span></div>`;
+  if (!lista.length) {
+    html += `<div class="empty"><span>Nenhuma transferência registrada.</span></div>`;
+  } else {
+    html += `<div class="tf-list">`;
+    lista.forEach((t) => {
+      const gi = transf.indexOf(t);
+      html += `<div class="tf-item">
+        <div class="tf-i-main"><b>${t.n}</b>
+          <span>${t.de} <span class="tf-arrow">→</span> ${t.para}</span></div>
+        <div class="tf-i-rod">a partir da ${t.rodada}ª rodada</div>
+        <button class="xbtn" onclick="delTransf(${gi})" title="Desfazer">&times;</button>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  html += `</div>`;
+  el.innerHTML = html;
+  preencherJogadoresTransf();
+}
+
+function preencherJogadoresTransf() {
+  const sel = document.getElementById('tfJog');
+  if (!sel) return;
+  const ordenado = [...roster].sort((a, b) =>
+    TEAMS.indexOf(a.e) - TEAMS.indexOf(b.e) || a.n.localeCompare(b.n));
+  sel.innerHTML = ordenado.map((p, i) =>
+    `<option value="${roster.indexOf(p)}">${p.n} — ${p.e}</option>`).join('');
+  tfPreenche();
+}
+
+function tfPreenche() {
+  const sel = document.getElementById('tfJog');
+  const p = roster[+sel.value];
+  if (p) document.getElementById('tfDe').value = p.e;
+}
+
+function registrarTransf() {
+  if (!exigeEdicao()) return;
+  const p = roster[+document.getElementById('tfJog').value];
+  const para = document.getElementById('tfPara').value;
+  const rod = parseInt(document.getElementById('tfRod').value);
+  if (!p) return;
+  if (p.e === para) { toast('O jogador já está nesse time'); return; }
+  transf.push({ n: p.n, de: p.e, para, rodada: rod, ts: Date.now() });
+  p.e = para;   /* time atual passa a ser o novo */
+  /* reordena o roster para o jogador aparecer no elenco novo */
+  roster.sort((a, b) => TEAMS.indexOf(a.e) - TEAMS.indexOf(b.e) || a.n.localeCompare(b.n));
+  save(); rAll();
+  toast(`${p.n} transferido para ${para}`);
+}
+
+function delTransf(i) {
+  if (!exigeEdicao()) return;
+  const t = transf[i];
+  if (!t) return;
+  if (!confirm(`Desfazer a transferência de ${t.n} (${t.de} → ${t.para})?\n\nO jogador volta para ${t.de}.`)) return;
+  /* reverte o time atual apenas se esta foi a última transferência dele */
+  const dele = transf.filter(x => x.n === t.n).sort((a,b)=>a.rodada-b.rodada);
+  const ehUltima = dele[dele.length-1] === t;
+  const p = roster.find(x => x.n === t.n && x.e === t.para);
+  if (ehUltima && p) p.e = t.de;
+  transf.splice(i, 1);
+  roster.sort((a, b) => TEAMS.indexOf(a.e) - TEAMS.indexOf(b.e) || a.n.localeCompare(b.n));
+  save(); rAll();
+  toast('Transferência desfeita');
+}
+
 function rTabela() {
   const tab = tabelaClassificacao();
   const jogados = jogos.filter(g => g.fim).length;
@@ -1505,7 +1718,7 @@ function rTabela() {
 }
 
 function rAll() {
-  rKpis(); rBar(); rChips(); rSquad(); rSusp(); rGrade(); rArti(); rTabela(); rJogos(); rEqui(); rRegra();
+  rKpis(); rBar(); rChips(); rSquad(); rSusp(); rGrade(); rArti(); rTabela(); rJogos(); rPortal(); rTransf(); rEqui(); rRegra();
 }
 
 /* ── PERSISTÊNCIA ─────────────────────────────────────── */
@@ -1529,7 +1742,7 @@ let ultimoSync = 0;
 
 let saveTO = null;
 function estadoAtual() {
-  return { roster, jogos, lastRound, curRound, curTeam, duploConta, _v: 4 };
+  return { roster, jogos, transf, lastRound, curRound, curTeam, duploConta, _v: 5 };
 }
 
 function save() {
@@ -1565,6 +1778,7 @@ function aplicarEstado(o) {
   roster.forEach(p => { p.r = p.r || {}; p.g = p.g || {}; });
   if (o) {
     jogos      = Array.isArray(o.jogos) ? o.jogos : [];
+    transf     = Array.isArray(o.transf) ? o.transf : [];
     lastRound  = o.lastRound || 4;
     curRound   = o.curRound  || lastRound;
     curTeam    = o.curTeam   || null;
