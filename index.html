@@ -310,6 +310,18 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
 .jlist{display:flex;flex-direction:column;gap:8px}
 .jrow{display:grid;grid-template-columns:1fr auto 1fr auto auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--rule);border-radius:9px;background:var(--paper)}
 .jrow.fim{border-color:var(--rule2);background:var(--panel2)}
+/* ── mata-mata ── */
+.mfase{margin:22px 0 10px;display:flex;align-items:center;gap:10px}
+.mfase h3{font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold,#d4a017)}
+.mfase .mln{flex:1;height:1px;background:var(--rule)}
+.mfase:first-child{margin-top:0}
+.mrow{display:grid;grid-template-columns:1fr auto 1fr auto auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--rule);border-radius:9px;background:var(--paper);margin-bottom:8px}
+.mrow.fim{border-color:var(--rule2);background:var(--panel2)}
+.mrow .mlbl{grid-column:1/-1;font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:-4px}
+.mpen{grid-column:1/-1;display:flex;align-items:center;gap:8px;justify-content:center;font-size:11px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.mpen .jgol{width:40px;height:32px;font-size:14px}
+.mwin{color:var(--ok);font-weight:800}
+.mvago{color:var(--ink3);font-style:italic}
 .jteam{padding:8px 10px;border:1px solid var(--rule2);border-radius:6px;background:var(--panel2);color:#fff;font-size:13px;font-weight:700;outline:none;cursor:pointer;min-width:0}
 .jteam:focus{border-color:var(--rb-red)}
 .jscore{display:flex;align-items:center;gap:8px}
@@ -412,6 +424,7 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
     <button class="nav-b" data-p="arti">Artilharia</button>
     <button class="nav-b" data-p="tabela">Classificação</button>
     <button class="nav-b" data-p="jogos">Jogos</button>
+    <button class="nav-b" data-p="mata">Mata-Mata</button>
     <button class="nav-b" data-p="portal">Portal</button>
     <button class="nav-b" data-p="transf">Transferências</button>
     <button class="nav-b" data-p="equi">Equipes</button>
@@ -477,6 +490,7 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
 
   <section class="pane" id="p-tabela"><div class="pane-in" id="tabelaBody"></div></section>
   <section class="pane" id="p-jogos"><div class="pane-in" id="jogosBody"></div></section>
+  <section class="pane" id="p-mata"><div class="pane-in" id="mataBody"></div></section>
   <section class="pane" id="p-equi"><div class="pane-in" id="equiBody"></div></section>
   <section class="pane" id="p-portal"><div class="pane-in" id="portalBody"></div></section>
   <section class="pane" id="p-transf"><div class="pane-in" id="transfBody"></div></section>
@@ -621,7 +635,18 @@ const ROSTER=[
       cumprida, não no momento em que é aplicada.
    4. Ciclo e situação consideram apenas rodadas concluídas.
    ══════════════════════════════════════════════════════════ */
-const ROUNDS = 11, YL = 3;
+const LIGA_ROUNDS = 11;              /* fase de pontos corridos */
+const ROUNDS = 14, YL = 3;           /* 12=Quartas, 13=Semifinal, 14=Final */
+const FASE_NOME  = { 12: 'Quartas', 13: 'Semifinal', 14: 'Final' };
+const FASE_CURTO = { 12: 'QF', 13: 'SF', 14: 'F' };
+const FASE_A     = { 12: 'as Quartas', 13: 'a Semifinal', 14: 'a Final' };
+const FASE_NA    = { 12: 'nas Quartas', 13: 'na Semifinal', 14: 'na Final' };
+const FASE_DA    = { 12: 'das Quartas', 13: 'da Semifinal', 14: 'da Final' };
+function rodLbl(r)  { return r <= LIGA_ROUNDS ? r + 'ª rodada' : (FASE_NOME[r] || 'próxima competição'); }
+function rodCurto(r){ return r <= LIGA_ROUNDS ? String(r) : (FASE_CURTO[r] || '+'); }
+function rodA(r)    { return r <= LIGA_ROUNDS ? 'a ' + r + 'ª rodada' : (FASE_A[r] || 'a próxima competição'); }
+function rodNa(r)   { return r <= LIGA_ROUNDS ? 'na ' + r + 'ª rodada' : (FASE_NA[r] || 'na próxima competição'); }
+function rodDa(r)   { return r <= LIGA_ROUNDS ? 'da ' + r + 'ª rodada' : (FASE_DA[r] || 'da próxima competição'); }
 const K_ROS = 'rrtv_roster_v2', K_CFG = 'rrtv_cfg_v2';
 
 /* Estados possíveis de uma rodada:
@@ -636,6 +661,9 @@ const K_ROS = 'rrtv_roster_v2', K_CFG = 'rrtv_cfg_v2';
    Pontuação: vitória 3, empate 1. Desempate: pontos > vitórias > confronto
    direto > saldo de gols. Turno único. */
 let jogos = [];   /* preenchido do estado salvo */
+function jogoMataVazio() { return { casa: null, fora: null, gc: null, gf: null, pc: null, pf: null, fim: false }; }
+function mataVazio() { return { qf: [jogoMataVazio(), jogoMataVazio(), jogoMataVazio(), jogoMataVazio()], sf: [jogoMataVazio(), jogoMataVazio()], fn: [jogoMataVazio()] }; }
+let mata = mataVazio();
 let transf = [];  /* transferências: {n, de, para, rodada, ts} */
 
 /* Em que time o jogador estava numa dada rodada.
@@ -678,7 +706,7 @@ function tabelaClassificacao() {
   const T = {};
   TEAMS.forEach(t => T[t] = { t, pts:0, j:0, v:0, e:0, d:0, gp:0, gc:0, sg:0 });
   jogos.forEach(g => {
-    if (!g.fim) return;
+    if (!g.fim || g.rodada > LIGA_ROUNDS) return;
     const A = T[g.casa], B = T[g.fora];
     if (!A || !B) return;
     A.j++; B.j++;
@@ -840,9 +868,11 @@ function cardCls(ms) {
 
 /* "5ª rodada" | "5ª e 6ª rodadas" | "5ª a 7ª rodadas" */
 function rodadasTexto(de, ate) {
-  if (ate <= de) return de + 'ª rodada';
-  if (ate === de + 1) return de + 'ª e ' + ate + 'ª rodadas';
-  return de + 'ª a ' + ate + 'ª rodadas';
+  const nm = r => r <= LIGA_ROUNDS ? r + 'ª' : (FASE_NOME[r] || 'próx. competição');
+  if (ate <= de) return rodLbl(de);
+  const suf = ate <= LIGA_ROUNDS ? ' rodadas' : '';
+  if (ate === de + 1) return nm(de) + ' e ' + nm(ate) + suf;
+  return nm(de) + ' a ' + nm(ate) + suf;
 }
 function jogosTexto(n) { return n + (n === 1 ? ' jogo' : ' jogos'); }
 
@@ -862,7 +892,7 @@ function rKpis() {
      <div class="kpi v"><b>${tv}</b><span>Vermelhos</span></div>
      <div class="kpi s"><b>${ns}</b><span>Suspensos</span></div>
      <div class="kpi"><b>${tg}</b><span>Gols</span></div>
-     <div class="kpi ref"><b>${lastRound}ª</b><span>Rodada oficial</span>${
+     <div class="kpi ref"><b>${lastRound <= LIGA_ROUNDS ? lastRound + 'ª' : FASE_CURTO[lastRound]}</b><span>${lastRound <= LIGA_ROUNDS ? 'Rodada oficial' : FASE_NOME[lastRound] + ' oficial'}</span>${
        fut ? `<em title="Lançamentos em rodadas ainda não concluídas. Entram nas somas quando a rodada for marcada como concluída.">+${fut} em aberto</em>` : ''}</div>`;
   document.getElementById('navSusp').textContent = ns;
   document.getElementById('navSusp').style.display = ns ? '' : 'none';
@@ -874,7 +904,7 @@ function rBar() {
   for (let r = 1; r <= ROUNDS; r++) {
     const done = r <= lastRound;
     pills += `<button class="rpill${r===curRound?' on':''}${done?' done':''}"
-      onclick="setRound(${r})" title="Rodada ${r}${done?' (concluída)':''}">${r}</button>`;
+      onclick="setRound(${r})" title="${rodLbl(r)}${done?' (concluída)':''}">${rodCurto(r)}</button>`;
   }
   document.getElementById('rPills').innerHTML = pills;
 
@@ -925,7 +955,7 @@ function rSquad() {
   const tp = all().filter(x => x.p.e === curTeam);
   document.getElementById('sqName').textContent = curTeam || '—';
   document.getElementById('sqCount').textContent = tp.length
-    ? `${tp.length} jogadores · lançando a ${curRound}ª rodada`
+    ? `${tp.length} jogadores · lançando ${rodA(curRound)}`
       + (curRound > lastRound ? ' (em aberto: fora das somas até concluir)' : '')
     : '';
 
@@ -1003,7 +1033,7 @@ function rSusp() {
   pend.forEach(x => { (byTeam[x.p.e] = byTeam[x.p.e] || []).push(x); });
 
   let h = `<div class="sec"><div class="sec-hd">
-      <h2>Suspensos para a ${lastRound + 1}ª rodada</h2>
+      <h2>Suspensos para ${rodA(lastRound + 1)}</h2>
       <span class="n">${pend.length}</span>
       <div class="acts">
         <button class="btn pri" onclick="copySusp()">Copiar lista</button>
@@ -1012,7 +1042,7 @@ function rSusp() {
 
   if (!pend.length) {
     h += `<div class="empty"><b>Nenhum suspenso</b>
-      <span>Nenhum jogador atingiu o critério até a ${lastRound}ª rodada.</span></div>`;
+      <span>Nenhum jogador atingiu o critério até ${rodA(lastRound)}.</span></div>`;
   } else {
     Object.keys(byTeam).sort().forEach(t => {
       h += `<div class="sus-team"><div class="sus-team-h">${t} · ${byTeam[t].length}</div>`;
@@ -1023,10 +1053,10 @@ function rSusp() {
         h += `<div class="sus-row">
           <div class="sus-card ${cardCls(ms)}"></div>
           <div class="sus-i"><b>${p.n}</b>
-            <span>${ult ? motivosTexto(ms) + ' na ' + ult.r + 'ª rodada' : ''}</span></div>
+            <span>${ult ? motivosTexto(ms) + ' ' + rodNa(ult.r) : ''}</span></div>
           <div class="sus-r">${s.jogosPend > 1
             ? `<b class="dois">${jogosTexto(s.jogosPend)}</b><br>${rodadasTexto(de, ate)}`
-            : `Cumpre na ${de}ª`}</div>
+            : `Cumpre ${rodNa(de)}`}</div>
         </div>`;
       });
       h += `</div>`;
@@ -1116,7 +1146,7 @@ function fallbackCopy(txt, cb) {
 function rGrade() {
   let h = `<th class="pin l">Jogador</th>`;
   for (let r = 1; r <= ROUNDS; r++)
-    h += `<th style="width:36px${r > lastRound ? ';color:#c3cad4' : ''}">${r}</th>`;
+    h += `<th style="width:36px${r > lastRound ? ';color:#c3cad4' : ''}" title="${rodLbl(r)}">${rodCurto(r)}</th>`;
   h += `<th style="width:40px">A</th><th style="width:40px">V</th>
         <th style="width:48px" title="Amarelos acumulados. Zera apenas ao cumprir suspensão por 3 amarelos">Ciclo</th>
         <th style="width:42px">Gols</th><th style="width:96px">Situação</th>`;
@@ -1148,7 +1178,7 @@ function rGrade() {
                 : c === 'AV' ? 'amarelo + vermelho direto'
                 : c === 'V'  ? 'vermelho direto' : 'amarelo';
       row += `<td class="${r > lastRound ? 'fut' : ''}">${
-        c ? `<span class="gc ${cls}" title="Rodada ${r}: ${ttl}">${lbl}</span>`
+        c ? `<span class="gc ${cls}" title="${rodLbl(r)}: ${ttl}">${lbl}</span>`
           : `<span class="gempty">·</span>`}</td>`;
     }
     const cw = s.ciclo >= 3 ? 'w3' : s.ciclo === 2 ? 'w2' : s.ciclo === 1 ? 'w1' : '';
@@ -1336,7 +1366,7 @@ function limparRodada(i) {
   if (!p) return;
   delete p.r[curRound];
   delete p.g[curRound];
-  save(); rAll(); toast(`Lançamentos da ${curRound}ª rodada removidos de ${p.n}`);
+  save(); rAll(); toast(`Lançamentos ${rodDa(curRound)} removidos de ${p.n}`);
 }
 
 function servindoAgora(p) {
@@ -1416,9 +1446,16 @@ function rJogos() {
 
   /* seletor de rodada para filtrar os jogos exibidos */
   html += `<div class="jrbar">Rodada: `;
-  for (let r = 1; r <= ROUNDS; r++)
+  for (let r = 1; r <= LIGA_ROUNDS; r++)
     html += `<button class="jrpill${r===curRound?' on':''}" onclick="setRound(${r})">${r}</button>`;
   html += `</div>`;
+
+  if (curRound > LIGA_ROUNDS) {
+    html += `<div class="empty"><b>${FASE_NOME[curRound]} é fase de mata-mata</b>
+      <span>O placar desta fase é lançado na aba Mata-Mata. Os cartões e gols dos atletas, na aba Lançar.</span></div></div>`;
+    document.getElementById('jogosBody').innerHTML = html;
+    return;
+  }
 
   const daRodada = jogos.map((g, idx) => ({ g, idx })).filter(x => x.g.rodada === curRound);
 
@@ -1457,6 +1494,7 @@ function rJogos() {
 /* ── AÇÕES DE JOGO ── */
 function novoJogo() {
   if (!exigeEdicao()) return;
+  if (curRound > LIGA_ROUNDS) { toast('Use a aba Mata-Mata para os placares desta fase'); return; }
   /* sugere duas equipes que ainda não se enfrentaram, senão as duas primeiras */
   jogos.push({ rodada: curRound, casa: TEAMS[0], fora: TEAMS[1], gc: null, gf: null, fim: false });
   save(); rAll();
@@ -1482,6 +1520,145 @@ function delJogo(i) {
   if (!exigeEdicao()) return;
   if (!confirm('Remover este jogo?')) return;
   jogos.splice(i, 1); save(); rAll();
+}
+
+/* ══════════════ MATA-MATA ══════════════ */
+const M_FASES = [
+  { k: 'qf', titulo: 'Quartas de final', n: 4 },
+  { k: 'sf', titulo: 'Semifinais',       n: 2 },
+  { k: 'fn', titulo: 'Final',            n: 1 }
+];
+
+
+/* vencedores das partidas encerradas de uma fase */
+function vencedoresFase(fk) {
+  return mata[fk].map(vencedorMata).filter(Boolean);
+}
+/* times elegíveis para os dropdowns de cada fase */
+function opcoesFase(fk) {
+  if (fk === 'qf') return TEAMS;
+  if (fk === 'sf') return vencedoresFase('qf');
+  return vencedoresFase('sf');
+}
+
+function vencedorMata(g) {
+  if (!g.fim || g.gc === null || g.gf === null) return null;
+  if (g.gc > g.gf) return g.casa;
+  if (g.gf > g.gc) return g.fora;
+  if (g.pc !== null && g.pf !== null && g.pc !== g.pf) return g.pc > g.pf ? g.casa : g.fora;
+  return null;
+}
+
+function rMata() {
+  const el = document.getElementById('mataBody');
+  if (!el) return;
+  let html = `<div class="sec"><div class="sec-hd">
+    <h2>Mata-Mata</h2>
+    <span style="font-size:11px;color:var(--ink3);font-weight:600">Jogo único · empate decide nos pênaltis · encerre os jogos para liberar os vencedores na fase seguinte</span></div>`;
+
+  M_FASES.forEach(fase => {
+    html += `<div class="mfase"><h3>${fase.titulo}</h3><div class="mln"></div></div>`;
+    mata[fase.k].forEach((g, i) => {
+      const fim = g.fim;
+      const venc = vencedorMata(g);
+      const rot = fase.n > 1 ? `${fase.titulo.replace(' de final','')} ${i + 1}` : fase.titulo;
+      const empatado = g.gc !== null && g.gf !== null && g.gc === g.gf;
+      const eleg = opcoesFase(fase.k);
+      const opts = lado => `<option value="">— definir —</option>` +
+        /* mantém o time já escolhido visível mesmo se deixar de ser elegível */
+        [...new Set(g[lado] ? [g[lado], ...eleg] : eleg)]
+          .map(t => `<option${t === g[lado] ? ' selected' : ''}>${t}</option>`).join('');
+      html += `<div class="mrow${fim ? ' fim' : ''}">
+        <div class="mlbl">${rot}${venc ? ` · <span class="mwin">${venc} classificado</span>`
+          : (!eleg.length && fase.k !== 'qf' ? ` · <span class="mvago">aguardando a fase anterior</span>` : '')}</div>
+        <select class="jteam" onchange="setMata('${fase.k}',${i},'casa',this.value)">${opts('casa')}</select>
+        <div class="jscore">
+          <input type="number" min="0" max="99" class="jgol" value="${g.gc ?? ''}"
+            oninput="setMata('${fase.k}',${i},'gc',this.value)" placeholder="-">
+          <span class="jx">×</span>
+          <input type="number" min="0" max="99" class="jgol" value="${g.gf ?? ''}"
+            oninput="setMata('${fase.k}',${i},'gf',this.value)" placeholder="-">
+        </div>
+        <select class="jteam" onchange="setMata('${fase.k}',${i},'fora',this.value)">${opts('fora')}</select>
+        <button class="jfim${fim ? ' on' : ''}" onclick="toggleFimMata('${fase.k}',${i})"
+          title="${fim ? 'Jogo encerrado (clique para reabrir)' : 'Marcar como encerrado'}">${fim ? 'Encerrado' : 'Encerrar'}</button>
+        <button class="xbtn" onclick="limparMata('${fase.k}',${i})" title="Limpar este jogo">&times;</button>
+        ${empatado ? `<div class="mpen">Pênaltis:
+          <input type="number" min="0" max="99" class="jgol" value="${g.pc ?? ''}"
+            oninput="setMata('${fase.k}',${i},'pc',this.value)" placeholder="-">
+          <span class="jx">×</span>
+          <input type="number" min="0" max="99" class="jgol" value="${g.pf ?? ''}"
+            oninput="setMata('${fase.k}',${i},'pf',this.value)" placeholder="-"></div>` : ''}
+      </div>`;
+    });
+  });
+
+  const campeao = vencedorMata(mata.fn[0]);
+  if (campeao) html += `<div class="mfase"><h3 style="color:var(--ok)">Campeão: ${campeao}</h3><div class="mln"></div></div>`;
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+function setMata(fk, i, campo, val) {
+  if (!exigeEdicao()) return;
+  const g = mata[fk][i]; if (!g) return;
+  if (['gc', 'gf', 'pc', 'pf'].includes(campo)) {
+    val = val === '' ? null : Math.max(0, Math.min(99, parseInt(val) || 0));
+  } else {
+    val = val || null;
+    if (val && !opcoesFase(fk).includes(val) && (fk !== 'qf')) {
+      toast(val + ' não está classificado para esta fase'); rMata(); return;
+    }
+  }
+  g[campo] = val;
+  if (g.casa && g.fora && g.casa === g.fora) toast('Um time não joga contra ele mesmo');
+  save(); rMata();
+}
+
+function toggleFimMata(fk, i) {
+  if (!exigeEdicao()) return;
+  const g = mata[fk][i]; if (!g) return;
+  if (!g.fim) {
+    if (!g.casa || !g.fora) { toast('Defina os dois times antes de encerrar'); return; }
+    if (g.casa === g.fora) { toast('Corrija os times antes de encerrar'); return; }
+    if (g.gc === null || g.gf === null) { toast('Informe o placar antes de encerrar'); return; }
+    if (g.gc === g.gf && (g.pc === null || g.pf === null || g.pc === g.pf)) {
+      toast('Placar empatado: informe os pênaltis para definir o vencedor'); return;
+    }
+    g.fim = true;
+    const venc = vencedorMata(g);
+    if (venc) toast(venc + ' classificado');
+  } else {
+    /* reabrir: o antigo vencedor deixa de ser elegível, então sai
+       das seleções da(s) fase(s) seguinte(s) ainda não encerradas */
+    const venc = vencedorMata(g);
+    g.fim = false;
+    if (venc) removerEleito(fk, venc);
+  }
+  save(); rMata();
+}
+
+/* remove um time das escolhas da fase seguinte (e em cascata),
+   sem tocar em jogos já encerrados */
+function removerEleito(fk, time) {
+  const prox = fk === 'qf' ? 'sf' : fk === 'sf' ? 'fn' : null;
+  if (!prox) return;
+  mata[prox].forEach((g, i) => {
+    if (g.fim) return;
+    ['casa', 'fora'].forEach(l => {
+      if (g[l] === time) { g[l] = null; removerEleito(prox, time); }
+    });
+  });
+}
+
+function limparMata(fk, i) {
+  if (!exigeEdicao()) return;
+  if (!confirm('Limpar times e placar deste jogo?')) return;
+  const g = mata[fk][i];
+  const venc = vencedorMata(g);
+  mata[fk][i] = jogoMataVazio();
+  if (venc) removerEleito(fk, venc);
+  save(); rMata();
 }
 
 function rRegra() {
@@ -1556,7 +1733,7 @@ function rPortal() {
 
   html += `<div class="portal-feed">`;
   rodadas.forEach(r => {
-    html += `<div class="pf-round"><span class="pf-round-lbl">${r}ª rodada</span>
+    html += `<div class="pf-round"><span class="pf-round-lbl">${rodLbl(r)}</span>
       <span class="pf-round-n">${porRodada[r].length} transferência(s)</span></div>`;
     porRodada[r].forEach(t => {
       html += `<div class="pf-card">
@@ -1593,7 +1770,7 @@ function rTransf() {
       </div>
       <div class="tf-field tf-narrow">
         <label>A partir da rodada</label>
-        <select id="tfRod">${Array.from({length:ROUNDS},(_,i)=>`<option${i+1===curRound?' selected':''}>${i+1}</option>`).join('')}</select>
+        <select id="tfRod">${Array.from({length:ROUNDS},(_,i)=>`<option value="${i+1}"${i+1===curRound?' selected':''}>${i+1<=LIGA_ROUNDS?(i+1)+'ª':FASE_NOME[i+1]}</option>`).join('')}</select>
       </div>
       <button class="btn pri" onclick="registrarTransf()">Confirmar transferência</button>
     </div>
@@ -1613,7 +1790,7 @@ function rTransf() {
       html += `<div class="tf-item">
         <div class="tf-i-main"><b>${t.n}</b>
           <span>${t.de} <span class="tf-arrow">→</span> ${t.para}</span></div>
-        <div class="tf-i-rod">a partir da ${t.rodada}ª rodada</div>
+        <div class="tf-i-rod">a partir ${rodDa(t.rodada)}</div>
         <button class="xbtn" onclick="delTransf(${gi})" title="Desfazer">&times;</button>
       </div>`;
     });
@@ -1698,7 +1875,7 @@ function rTabela() {
   </tr></thead><tbody>`;
   tab.forEach((x, i) => {
     const pos = i + 1;
-    const zona = pos <= 4 ? 'z-top' : '';   /* destaque para os 4 primeiros */
+    const zona = pos <= 8 ? 'z-top' : '';   /* destaque para os 8 primeiros */
     html += `<tr class="${zona}">
       <td class="c pos">${pos}º</td>
       <td class="nm">${x.t}</td>
@@ -1713,12 +1890,12 @@ function rTabela() {
     </tr>`;
   });
   html += `</tbody></table>
-    <div class="tab-leg">Os 4 primeiros destacados. Desempate: pontos, vitórias, confronto direto, saldo de gols.</div></div>`;
+    <div class="tab-leg">Os 8 primeiros destacados. Desempate: pontos, vitórias, confronto direto, saldo de gols.</div></div>`;
   document.getElementById('tabelaBody').innerHTML = html;
 }
 
 function rAll() {
-  rKpis(); rBar(); rChips(); rSquad(); rSusp(); rGrade(); rArti(); rTabela(); rJogos(); rPortal(); rTransf(); rEqui(); rRegra();
+  rKpis(); rBar(); rChips(); rSquad(); rSusp(); rGrade(); rArti(); rTabela(); rJogos(); rMata(); rPortal(); rTransf(); rEqui(); rRegra();
 }
 
 /* ── PERSISTÊNCIA ─────────────────────────────────────── */
@@ -1742,7 +1919,7 @@ let ultimoSync = 0;
 
 let saveTO = null;
 function estadoAtual() {
-  return { roster, jogos, transf, lastRound, curRound, curTeam, duploConta, _v: 5 };
+  return { roster, jogos, transf, mata, lastRound, curRound, curTeam, duploConta, _v: 6 };
 }
 
 function save() {
@@ -1779,6 +1956,8 @@ function aplicarEstado(o) {
   if (o) {
     jogos      = Array.isArray(o.jogos) ? o.jogos : [];
     transf     = Array.isArray(o.transf) ? o.transf : [];
+    mata       = (o.mata && Array.isArray(o.mata.qf)) ? o.mata : mataVazio();
+    ['qf','sf','fn'].forEach(f => (mata[f] || []).forEach(g => { g.pc = g.pc ?? null; g.pf = g.pf ?? null; }));
     lastRound  = o.lastRound || 4;
     curRound   = o.curRound  || lastRound;
     curTeam    = o.curTeam   || null;
