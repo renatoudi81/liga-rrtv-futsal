@@ -311,14 +311,15 @@ sup.futn{font-size:8.5px;font-weight:800;color:var(--ink3);margin-left:2px;curso
 .jrow{display:grid;grid-template-columns:1fr auto 1fr auto auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--rule);border-radius:9px;background:var(--paper)}
 .jrow.fim{border-color:var(--rule2);background:var(--panel2)}
 /* ── mata-mata ── */
-.mfase{margin:22px 0 10px;display:flex;align-items:center;gap:10px}
+.mfase{margin:22px 0 10px;display:flex;align-items:center;gap:10px;max-width:900px}
 .mfase h3{font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold,#d4a017)}
 .mfase .mln{flex:1;height:1px;background:var(--rule)}
 .mfase:first-child{margin-top:0}
-.mrow{display:grid;grid-template-columns:1fr auto 1fr auto auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--rule);border-radius:9px;background:var(--paper);margin-bottom:8px}
+.mrow{display:grid;grid-template-columns:minmax(160px,320px) auto minmax(160px,320px) auto auto;gap:10px;align-items:center;justify-content:start;max-width:900px;padding:10px 12px;border:1px solid var(--rule);border-radius:9px;background:var(--paper);margin-bottom:8px}
 .mrow.fim{border-color:var(--rule2);background:var(--panel2)}
 .mrow .mlbl{grid-column:1/-1;font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:-4px}
-.mpen{grid-column:1/-1;display:flex;align-items:center;gap:8px;justify-content:center;font-size:11px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.mpen{grid-column:1/-1;display:flex;align-items:center;gap:8px;justify-content:flex-start;padding-left:4px;font-size:11px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+@media(max-width:640px){.mrow{grid-template-columns:1fr auto 1fr;justify-content:stretch}.mrow .jfim{grid-column:1/3;justify-self:start}.mrow .xbtn{grid-column:3;justify-self:end;grid-row:3}}
 .mpen .jgol{width:40px;height:32px;font-size:14px}
 .mwin{color:var(--ok);font-weight:800}
 .mvago{color:var(--ink3);font-style:italic}
@@ -1605,7 +1606,8 @@ function rMata() {
         [...new Set(g[lado] ? [g[lado], ...eleg] : eleg)]
           .map(t => `<option${t === g[lado] ? ' selected' : ''}>${t}</option>`).join('');
       html += `<div class="mrow${fim ? ' fim' : ''}">
-        <div class="mlbl">${rot}${venc ? ` · <span class="mwin">${venc} classificado</span>`
+        <div class="mlbl">${rot}${venc
+          ? ` · <span class="mwin">${venc} classificado${empatado ? ` nos pênaltis (${g.pc} × ${g.pf})` : ''}</span>`
           : (!eleg.length && fase.k !== 'qf' ? ` · <span class="mvago">aguardando a fase anterior</span>` : '')}</div>
         <select class="jteam" onchange="setMata('${fase.k}',${i},'casa',this.value)">${opts('casa')}</select>
         <div class="jscore">
