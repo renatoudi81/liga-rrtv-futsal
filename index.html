@@ -663,7 +663,15 @@ const K_ROS = 'rrtv_roster_v2', K_CFG = 'rrtv_cfg_v2';
 let jogos = [];   /* preenchido do estado salvo */
 function jogoMataVazio() { return { casa: null, fora: null, gc: null, gf: null, pc: null, pf: null, fim: false }; }
 function mataVazio() { return { qf: [jogoMataVazio(), jogoMataVazio(), jogoMataVazio(), jogoMataVazio()], sf: [jogoMataVazio(), jogoMataVazio()], fn: [jogoMataVazio()] }; }
-let mata = mataVazio();
+/* confrontos oficiais das quartas (15, 18 e 21/09) já montados */
+function mataInicial() {
+  const m = mataVazio();
+  [['MILAN', 'MIDIÁTICOS'], ['MEDELLÍN', 'BAYERN DE PIRITIBA'],
+   ['MENINOS DA BOLA', 'REAL KJ'], ['ROTA BRASIL', 'RUBINHO SPORTS']]
+    .forEach((c, i) => { m.qf[i].casa = c[0]; m.qf[i].fora = c[1]; });
+  return m;
+}
+let mata = mataInicial();
 let transf = [];  /* transferências: {n, de, para, rodada, ts} */
 
 /* Em que time o jogador estava numa dada rodada.
@@ -925,14 +933,23 @@ function rBar() {
 /* ── ABA LANÇAR ───────────────────────────────────────── */
 function rChips() {
   const d = all();
+  const lista = timesDaRodada(curRound);
+  /* garante equipe válida para a rodada */
+  if (lista.length && !lista.includes(curTeam)) curTeam = lista[0];
   /* dropdown de equipes */
   const sel = document.getElementById('teamSel');
-  sel.innerHTML = TEAMS.map((t, i) => {
+  if (!lista.length) {
+    sel.innerHTML = `<option value="">— defina os confrontos na aba Mata-Mata —</option>`;
+    document.getElementById('teamCards').innerHTML =
+      `<span style="color:var(--ink3)">${FASE_NOME[curRound]} ainda sem confrontos definidos</span>`;
+    return;
+  }
+  sel.innerHTML = lista.map(t => {
     const tp = d.filter(x => x.p.e === t);
     let a = 0, v = 0;
     tp.forEach(x => { const c = x.p.r[curRound] || ''; if (c.includes('A')) a++; if (c.includes('V')) v++; });
     const mark = (a || v) ? `  (${a ? a + 'A' : ''}${a && v ? ' ' : ''}${v ? v + 'V' : ''})` : '';
-    return `<option value="${i}"${t === curTeam ? ' selected' : ''}>${t}${mark}</option>`;
+    return `<option value="${TEAMS.indexOf(t)}"${t === curTeam ? ' selected' : ''}>${t}${mark}</option>`;
   }).join('');
   /* resumo de cartões da equipe atual nesta rodada */
   const tp = d.filter(x => x.p.e === curTeam);
@@ -946,12 +963,22 @@ function rChips() {
 }
 
 function stepTeam(dir) {
-  let i = TEAMS.indexOf(curTeam);
-  i = (i + dir + TEAMS.length) % TEAMS.length;
-  pickTeam(TEAMS[i]);
+  const lista = timesDaRodada(curRound);
+  if (!lista.length) return;
+  let i = lista.indexOf(curTeam);
+  i = (i + dir + lista.length) % lista.length;
+  pickTeam(lista[i]);
 }
 
 function rSquad() {
+  if (!timesDaRodada(curRound).length) {
+    document.getElementById('sqName').textContent = FASE_NOME[curRound] || '—';
+    document.getElementById('sqCount').textContent = '';
+    document.getElementById('sqList').innerHTML = `<div class="empty">
+      <b>Confrontos ainda não definidos</b>
+      <span>Monte os jogos de ${FASE_NOME[curRound]} na aba Mata-Mata para liberar o lançamento de cartões e gols.</span></div>`;
+    return;
+  }
   const tp = all().filter(x => x.p.e === curTeam);
   document.getElementById('sqName').textContent = curTeam || '—';
   document.getElementById('sqCount').textContent = tp.length
@@ -1425,6 +1452,15 @@ function addQuick() {
   roster.push({ e: curTeam, n: nm, r: {}, g: {} });
   roster.sort((a, b) => TEAMS.indexOf(a.e) - TEAMS.indexOf(b.e) || a.n.localeCompare(b.n));
   save(); rAll(); toast(`${nm} adicionado ao ${curTeam}`);
+}
+
+/* equipes que disputam a rodada: 1-11 todas; QF/SF/F só as dos confrontos */
+function timesDaRodada(r) {
+  if (r <= LIGA_ROUNDS) return TEAMS;
+  const fk = r === 12 ? 'qf' : r === 13 ? 'sf' : 'fn';
+  const set = new Set();
+  mata[fk].forEach(g => { if (g.casa) set.add(g.casa); if (g.fora) set.add(g.fora); });
+  return TEAMS.filter(t => set.has(t));
 }
 
 function pickTeam(t) { curTeam = t; save(); rChips(); rSquad(); }
@@ -1956,7 +1992,7 @@ function aplicarEstado(o) {
   if (o) {
     jogos      = Array.isArray(o.jogos) ? o.jogos : [];
     transf     = Array.isArray(o.transf) ? o.transf : [];
-    mata       = (o.mata && Array.isArray(o.mata.qf)) ? o.mata : mataVazio();
+    mata       = (o.mata && Array.isArray(o.mata.qf)) ? o.mata : mataInicial();
     ['qf','sf','fn'].forEach(f => (mata[f] || []).forEach(g => { g.pc = g.pc ?? null; g.pf = g.pf ?? null; }));
     lastRound  = o.lastRound || 4;
     curRound   = o.curRound  || lastRound;
